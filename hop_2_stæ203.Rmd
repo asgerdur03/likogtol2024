@@ -1,6 +1,7 @@
 ---
 title: "Hópverkefni 2 STÆ203"
 author: "Ásgerður, Vilborg"
+date: "`r Sys.Date()`"
 output: 
   prettydoc::html_pretty:
     theme: cayman
@@ -19,16 +20,16 @@ library(tidyverse)
 data <- read.table("spurningar_um_lifid_24.csv", sep = ";", header = T, dec = ",")
 
 ```
-#Liður 1: Flokkabreyta
+## Liður 1: Flokkabreyta
 Veljið eina flokkabreytanna sem þið skoðuðuð í Hópverkefni 1. Teiknið graf sem lýsir úrtaksdreifingu hennar og lýsið útkomunni stuttlega.
 
-#Liður 2: Talnabreyta
+## Liður 2: Talnabreyta
 Veljið eina talnabreytanna sem þið skoðuðuð í Hópverkefni 1. Teiknið graf sem lýsir úrtaksdreifingu hennar og lýsið lögun hennar.
-
-#Liður 3: Samband talnabreytu og flokkabreytu.
+ 
+## Liður 3: Samband talnabreytu og flokkabreytu.
 Veljið eina talnabreytanna og eina flokkabreytanna sem þið skoðuðuð í Hópverkefni 1. Teiknið graf sem lýsir sambandi þessara tveggja breyta og lýsið útkomunni stuttlega.
 
-#Liður 4: Samband tveggja talnabreyta
+## Liður 4: Samband tveggja talnabreyta
 Veljið tvær talnabreytanna sem þið skoðuðuð í Hópverkefni 1. Teiknið graf sem lýsir sambandi þessara tveggja breyta og lýsið útkomunni stuttlega.
 
 
