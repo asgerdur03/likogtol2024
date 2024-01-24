@@ -1,0 +1,49 @@
+---
+title: "Hópverkefni 1 stæ203"
+author: "Ásgerður, Vilborg, Ari, Máni"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+```
+
+## Liður 1: Gerð breyta
+
+Lesið inn gögnin og kannið hvort allar breytur séu af réttri gerð að ykkar mati, þ.e.a.s. að talnabreytur séu vistaðar sem talnabreytur og flokkabreytur sem flokkabreytur. Ef einhverjar breytur eru ekki af þeirri gerð sem þið teljið að þær eigi að vera, notið þá R til að kóða þær á réttan hátt.
+
+```{r echo = F, message=FALSE}
+library(tidyverse)
+```
+
+```{r}
+dat <- read.table("spurningar_um_lifid_24.csv", sep = ";", header = T, dec = ",")
+glimpse(dat)
+```
+
+Finnst að mætti breyta:
+
+```{r}
+dat <- mutate(dat, ferdamati_skoli = factor(ferdamati_skoli))
+dat <- mutate(dat, is = factor(is))
+dat <- mutate(dat, fri = factor(fri))
+dat <- mutate(dat, tonleikar = factor(tonleikar))
+dat <- mutate(dat, stefnumot = factor(stefnumot))
+
+```
+
+## Liður 2: Flokkar flokkabreyta
+
+Veljið eins margar flokkabreytur og eru í hópnum ykkar til að kanna nánar. Eru einhverjar þeirra með óþarflega marga flokka? Ef svo er, búið þá til nýja breytu með færri flokkum þar sem að viðeigandi flokkar hafa verið sameinaðir. R raðar flokkum í stafrófsröð, væri eðlilegra að hafa einhverja aðra röð á flokkunum í flokkabreytunni ykkar? Ef svo, raðið þeim í þá röð.
+
+## Liður 3: Gildi talnabreyta
+
+Veljið eins margar talnabreytur og eru í hópnum ykkar til að kanna nánar. Eru einhverjar talnabreytur með óraunhæf gildi? Ef svo er, kóðið þau gildi sem NA.
+
+ahj\$likamsraekt_dagar[ahj\$likamsraekt_dagar \< 0\|ahj\$likamsraekt_dagar\>7] \<- NA
+
+## Liður 4: Fjöldi svara
+
+Hversu mörg svöruðu einhverri spurningu spurningalistans? Hversu mörg voru með nothæf svör við öllum spurningum spurningalistans?
