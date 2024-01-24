@@ -1,7 +1,6 @@
 ---
 title: "Hópverkefni 1 stæ203"
-author: "Ásgerður, Vilborg, Ari, Máni"
-date: "`r Sys.Date()`"
+author: "Ásgerður, Vilborg"
 output: html_document
 ---
 
@@ -20,7 +19,7 @@ library(tidyverse)
 
 ```{r}
 dat <- read.table("spurningar_um_lifid_24.csv", sep = ";", header = T, dec = ",")
-glimpse(dat)
+str(dat)
 ```
 
 Finnst að mætti breyta:
@@ -31,6 +30,7 @@ dat <- mutate(dat, is = factor(is))
 dat <- mutate(dat, fri = factor(fri))
 dat <- mutate(dat, tonleikar = factor(tonleikar))
 dat <- mutate(dat, stefnumot = factor(stefnumot))
+dat <- mutate(dat, skemmtilegur = (factor(skemmtilegur)))
 
 ```
 
@@ -38,12 +38,58 @@ dat <- mutate(dat, stefnumot = factor(stefnumot))
 
 Veljið eins margar flokkabreytur og eru í hópnum ykkar til að kanna nánar. Eru einhverjar þeirra með óþarflega marga flokka? Ef svo er, búið þá til nýja breytu með færri flokkum þar sem að viðeigandi flokkar hafa verið sameinaðir. R raðar flokkum í stafrófsröð, væri eðlilegra að hafa einhverja aðra röð á flokkunum í flokkabreytunni ykkar? Ef svo, raðið þeim í þá röð.
 
+2 í hóp
+
+Við völdum flokkabreyturnar **is** og **stefnumot** . Okkur fannst það óþarfir að breyta röðununni eða sameina flokkana, en ákvöðum að gera það samt.
+
+Við sameinuðum **stefnumot** í flokkana inni, og uti.
+
+```{r}
+levels(dat$stefnumot) <- c('uti', 'inni', 'inni', 'uti')
+```
+
+Við ætluðum að raða **is** í röð eftir uppáhalds okkar, en þeir voru nú þegar í þeirri röð
+
+```{r}
+levels(dat$is)
+```
+
 ## Liður 3: Gildi talnabreyta
 
 Veljið eins margar talnabreytur og eru í hópnum ykkar til að kanna nánar. Eru einhverjar talnabreytur með óraunhæf gildi? Ef svo er, kóðið þau gildi sem NA.
 
-ahj\$likamsraekt_dagar[ahj\$likamsraekt_dagar \< 0\|ahj\$likamsraekt_dagar\>7] \<- NA
+Völdum gildin **likamsraekt_dagar** og **systkini_fjoldi**
+
+**likamsraekt_dagar** völdum við vegna þess að fjöldi daga í vikur er í mesta lagi 7, svo öll svör lægri en 0, eða hærri en 8 yrðu óraunhæf.
+
+```{r}
+dat$likamsraekt_dagar[dat$likamsraekt_dagar < 0|dat$likamsraekt_dagar>7] <- NA
+
+```
+
 
 ## Liður 4: Fjöldi svara
 
-Hversu mörg svöruðu einhverri spurningu spurningalistans? Hversu mörg voru með nothæf svör við öllum spurningum spurningalistans?
+Hversu mörg svöruðu einhverri spurningu spurningalistans?
+
+Allir sem hafa röð svöruðu amk einni spurningu, svo við getum talið raðirnar, eða skoðað hvaða raðir hafa amk eitt svar.
+
+```{r}
+sum(rowSums(!is.na(dat)) > 0)
+nrow(dat)
+
+```
+
+Hversu mörg voru með nothæf svör við öllum spurningum spurningalistans?
+
+Búum til nýja töflu sem inniheldur bara þær línur sem innihalda ekkert NA.
+
+```{r}
+tab2 <- na.omit(dat)
+
+nrow(tab2)
+```
+
+
+
+Ásgerður og Vilborg gerðu allt verkefnið.
