@@ -1,13 +1,58 @@
 ---
-title: "Hop_2_stæ203"
-author: "Ásgerður Júlía Gunnarsdóttir"
-date: "`r Sys.Date()`"
-output: html_document
+title: "Hópverkefni 2 STÆ203"
+author: "Ásgerður, Vilborg"
+output: 
+  prettydoc::html_pretty:
+    theme: cayman
+    highlight: github
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+
 ```
 
-## R Markdown
+## Liður 1: Gerð breyta
 
+Lesið inn gögnin og kannið hvort allar breytur séu af réttri gerð að ykkar mati, þ.e.a.s. að talnabreytur séu vistaðar sem talnabreytur og flokkabreytur sem flokkabreytur. Ef einhverjar breytur eru ekki af þeirri gerð sem þið teljið að þær eigi að vera, notið þá R til að kóða þær á réttan hátt.
+
+Finnst að mætti breyta:
+
+
+
+## Liður 2: Flokkar flokkabreyta
+
+Veljið eins margar flokkabreytur og eru í hópnum ykkar til að kanna nánar. Eru einhverjar þeirra með óþarflega marga flokka? Ef svo er, búið þá til nýja breytu með færri flokkum þar sem að viðeigandi flokkar hafa verið sameinaðir. R raðar flokkum í stafrófsröð, væri eðlilegra að hafa einhverja aðra röð á flokkunum í flokkabreytunni ykkar? Ef svo, raðið þeim í þá röð.
+
+2 í hóp
+
+Við völdum flokkabreyturnar **is** og **stefnumot** . Okkur fannst það óþarfir að breyta röðununni eða sameina flokkana, en ákvöðum að gera það samt.
+
+Við sameinuðum **stefnumot** í flokkana inni, og uti.
+
+`
+
+Við ætluðum að raða **is** í röð eftir uppáhalds okkar, en þeir voru nú þegar í þeirri röð
+
+
+
+## Liður 3: Gildi talnabreyta
+
+Veljið eins margar talnabreytur og eru í hópnum ykkar til að kanna nánar. Eru einhverjar talnabreytur með óraunhæf gildi? Ef svo er, kóðið þau gildi sem NA.
+
+Völdum gildin **likamsraekt_dagar** og **systkini_fjoldi**
+
+**likamsraekt_dagar** völdum við vegna þess að fjöldi daga í vikur er í mesta lagi 7, svo öll svör lægri en 0, eða hærri en 8 yrðu óraunhæf.
+
+
+
+## Liður 4: Fjöldi svara
+
+Hversu mörg svöruðu einhverri spurningu spurningalistans?
+
+Allir sem hafa röð svöruðu amk einni spurningu, svo við getum talið raðirnar, eða skoðað hvaða raðir hafa amk eitt svar.
+
+
+
+
+Ásgerður og Vilborg gerðu allt verkefnið.
