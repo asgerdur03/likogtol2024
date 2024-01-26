@@ -12,28 +12,52 @@ output:
 knitr::opts_chunk$set(echo = TRUE)
 
 ```
+
 ```{r echo = F, message=FALSE}
 library(tidyverse)
+library(ggplot2)
+```
+
+## Liður 1: Flokkabreyta
+
+Veljið eina flokkabreytanna sem þið skoðuðuð í Hópverkefni 1. Teiknið graf sem lýsir úrtaksdreifingu hennar og lýsið útkomunni stuttlega.
+
+Lesum inn excel skjal úr hópverkefni 1, og breytum **is** breytuni í Factor breytu.
+
+```{r}
+dat <- read.table("spurningar_um_lifid_24.csv", sep = ";", header = T, dec = ",")
+
+dat <- mutate(dat, is = factor(is))
+```
+
+Breytum grafinu aðeins og gerum það fallegra.
+
+```{r echo=TRUE}
+ggplot(data = dat, aes(is, fill = is)) + 
+geom_bar() + labs(title = "Uppáhalds Ís", y = "fjöldi") + scale_fill_manual(values = c("#f542e6", "#452e2e", "#e3e3cf"))
+```
+
+Grafið sínir hvaða ís er uppáhaldsís nemenda í áfanganum. Við getum lesið úr því að uppáhaldsís flestra er súkkulaðiís, en uppáhaldssís fæstra er jarðaberjaís.
+
+## Liður 2: Talnabreyta
+
+Veljið eina talnabreytanna sem þið skoðuðuð í Hópverkefni 1. Teiknið graf sem lýsir úrtaksdreifingu hennar og lýsið lögun hennar.
+
+```{r}
+dat$likamsraekt_dagar[dat$likamsraekt_dagar < 0|dat$likamsraekt_dagar>7] <- NA
 ```
 
 ```{r}
-data <- read.table("spurningar_um_lifid_24.csv", sep = ";", header = T, dec = ",")
-
+ggplot(dat, aes(x = likamsraekt_dagar)) + geom_histogram(binwidth = 1, color= "darkblue", fill= "lightblue")+ xlab("dagar á viku") + ylab("fjöldi") 
 ```
-## Liður 1: Flokkabreyta
-Veljið eina flokkabreytanna sem þið skoðuðuð í Hópverkefni 1. Teiknið graf sem lýsir úrtaksdreifingu hennar og lýsið útkomunni stuttlega.
 
-## Liður 2: Talnabreyta
-Veljið eina talnabreytanna sem þið skoðuðuð í Hópverkefni 1. Teiknið graf sem lýsir úrtaksdreifingu hennar og lýsið lögun hennar.
- 
 ## Liður 3: Samband talnabreytu og flokkabreytu.
+
 Veljið eina talnabreytanna og eina flokkabreytanna sem þið skoðuðuð í Hópverkefni 1. Teiknið graf sem lýsir sambandi þessara tveggja breyta og lýsið útkomunni stuttlega.
 
 ## Liður 4: Samband tveggja talnabreyta
+
 Veljið tvær talnabreytanna sem þið skoðuðuð í Hópverkefni 1. Teiknið graf sem lýsir sambandi þessara tveggja breyta og lýsið útkomunni stuttlega.
-
-
-
 
 Gætið þess að allar R skipanir sem þið framkvæmið sjáist í skjalinu.
 
