@@ -47,13 +47,29 @@ Veljið eina talnabreytanna sem þið skoðuðuð í Hópverkefni 1. Teiknið gr
 dat$likamsraekt_dagar[dat$likamsraekt_dagar < 0|dat$likamsraekt_dagar>7] <- NA
 ```
 
-```{r}
+```{r warning =FALSE}
 ggplot(dat, aes(x = likamsraekt_dagar)) + geom_histogram(binwidth = 1, color= "darkblue", fill= "lightblue")+ xlab("dagar á viku") + ylab("fjöldi") 
 ```
 
 ## Liður 3: Samband talnabreytu og flokkabreytu.
 
 Veljið eina talnabreytanna og eina flokkabreytanna sem þið skoðuðuð í Hópverkefni 1. Teiknið graf sem lýsir sambandi þessara tveggja breyta og lýsið útkomunni stuttlega.
+
+Allar flokkabreytur eru strjálar.\
+Talnabreytur geta verið samfelldar eða stjálar.\
+Talnabreytur sem eru strjálar en taka mörg gildi meðhöndlum við eins og samfelldar breytur
+
+Ein eða tvær strjálar breytur\
+-Stöplarit x
+
+Ein samfelldbreyta\
+- Stuðlarit
+
+Ein samfelld, ein strjál\
+-Kassarit x
+
+Tvær samfelldar\
+-Punktarit
 
 ## Liður 4: Samband tveggja talnabreyta
 
