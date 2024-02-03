@@ -1,0 +1,179 @@
+---
+title: "Einstaklingsverkefni 2 STÆ203"
+author: "Ásgerður"
+date: "`r Sys.Date()`"
+output: 
+  html_document:
+    code_folding: show
+    theme:
+      bg: "#202123"
+      fg: "#B8BCC2"
+      primary: "#EA80FC"
+      base_font:
+        google: Prompt
+      heading_font:
+        google: Proza Libre
+      version: 3
+---
+
+```{r setup, include=FALSE}
+if (requireNamespace("thematic")) 
+  thematic::thematic_rmd(font = "auto")
+
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r echo = FALSE, message=FALSE}
+library(tidyverse)
+library(ggplot2)
+```
+
+Ég les inn töfluna "spurningar_um_lifid_24.csv"
+
+```{r}
+dat <- read.table("spurningar_um_lifid_24.csv", sep = ";", header = T, dec = ",")
+```
+
+## Liður 1: Flokkabreyta
+
+Veljið eina flokkabreytanna sem þið skoðuðuð í Hópverkefni 1. Teiknið graf sem lýsir úrtaksdreifingu hennar og lýsið útkomunni stuttlega með viðeigandi lýsistærðum.
+
+```{r}
+dat <- mutate(dat, is = factor(is))
+```
+
+Teiknum upp grafið fyrir flokkabreytuna **is**, í skemmtilegum litum
+
+```{r echo=TRUE}
+ggplot(data = dat, aes(is, fill = is)) + 
+geom_bar() + labs(title = "Uppáhalds Ís", y = "fjöldi") + scale_fill_manual(values = c("#f542e6", "#452e2e", "#e3e3cf"))
+```
+
+Finnum fjölda gilda með *table* skipuninni
+
+```{r}
+table(dat$is)
+
+```
+
+Sjáum úr bæði grafinu og töfluni að tíðasta gildið er *súkkulaðiís*.
+
+## Liður 2: Talnabreyta
+
+Veljið eina talnabreytanna sem þið skoðuðuð í Hópverkefni 1. Teiknið graf sem lýsir úrtaksdreifingu hennar og lýsið lögun hennar með viðeigandi lýsistærðum.
+
+```{r}
+dat$likamsraekt_dagar[dat$likamsraekt_dagar < 0|dat$likamsraekt_dagar>7] <- NA
+```
+
+Ég valdi að nota breytuna **likamsraekt_dagar**.
+
+```{r warning=FALSE}
+ggplot(dat, aes(x = likamsraekt_dagar)) + geom_histogram(binwidth = 1, color= "#46ad0e", fill= "#0c9bfa")+ xlab("dagar á viku") + ylab("fjöldi") 
+```
+
+```{r}
+summary(dat$likamsraekt_dagar)
+```
+
+```{r}
+sd(dat$likamsraekt_dagar, na.rm = T)
+```
+
+Sjáum að lægsta og hæsta gildi breytunar er *0* og *7*.
+
+Meðaltalið er *2.884* og miðgildið er *3*.
+
+Staðalfrávikið er *2.075605*.
+
+```{r}
+quantile(dat$likamsraekt_dagar, na.rm = T)
+```
+
+Síðan sjáum við hér fyrir ofan *hlutfallsmörkin*.
+
+## Liður 3: Samband talnabreytu og flokkabreytu.
+
+Veljið eina talnabreytanna og eina flokkabreytanna sem þið skoðuðuð í Hópverkefni 1. Teiknið graf sem lýsir sambandi þessara tveggja breyta og lýsið útkomunni stuttlega með viðeigandi lýsistærðum. Hér gæti verið smart að setja upp litla töflu.
+
+```{r warning=FALSE}
+ggplot(data = dat, aes(x = is, y = likamsraekt_dagar)) +
+  geom_boxplot(fill = "pink", color = "yellow", alpha = 0.7) +
+  theme_minimal() +
+  labs(title = "Boxplot af Hreytingu nemenda og uppáhaldsís þeirra",
+       x = "Flokkur",
+       y = "Likamsraekt Dagar")
+```
+
+```{r}
+library(dplyr)
+library(knitr)
+
+ice_cream_stats <- dat %>%
+  group_by(is) %>%
+  summarise(
+    Median = median(likamsraekt_dagar, na.rm = TRUE),
+    Lower_Quartile = quantile(likamsraekt_dagar, 0.25, na.rm = TRUE),
+    Upper_Quartile = quantile(likamsraekt_dagar, 0.75, na.rm = TRUE),
+    Mean = mean(likamsraekt_dagar, na.rm = TRUE),
+    SD = sd(likamsraekt_dagar, na.rm = TRUE),
+    Min = min(likamsraekt_dagar, na.rm = TRUE),
+    Max = max(likamsraekt_dagar, na.rm = TRUE)
+  )
+
+
+print(ice_cream_stats)
+
+kable(ice_cream_stats, format = "markdown", 
+      col.names = c("Ice Cream Category", "Median", "Lower Quartile", "Upper Quartile", "Mean", "SD", "Min", "Max"))
+
+
+```
+
+Hér sést taflan með lýsistærðunum, flokkað eftir ísbragðtegundum.
+
+## Liður 4: Samband tveggja talnabreyta
+
+Veljið tvær talnabreytanna sem þið skoðuðuð í Hópverkefni 1. Teiknið graf sem lýsir sambandi þessara tveggja breyta og lýsið útkomunni stuttlega með viðeigandi lýsitærðum.
+
+```{r warning=FALSE}
+ggplot(data = dat, aes(x = ferdatimi_skoli, y = systkini_fjoldi, color = systkini_fjoldi)) +
+  geom_point(shape = 10, size = 3, alpha = 0.6) +
+  
+  scale_color_gradient(low = "blue", high = "red") +
+ 
+  theme_minimal() +
+ 
+  labs(title = "Scatterplot of systkini_fjoldi by ferdatimi_skoli",
+       x = "Ferðatími í skóla (minutes)",
+       y = "Systkini fjöldi")
+```
+
+```{r}
+
+correlation <- cor(dat$ferdatimi_skoli, dat$systkini_fjoldi, use = "complete.obs")
+
+model <- lm(systkini_fjoldi ~ ferdatimi_skoli, data = dat)
+slope <- coef(model)[2]
+
+
+
+residuals <- residuals(model)
+
+statistics_table <- data.frame(
+  "Statistic" = c("Correlation", "Slope" ),
+  "Value" = c(correlation, slope)
+)
+
+print(statistics_table)
+
+```
+
+Sjáum að fylgnin milli breytana er mjög lítil, og þær eru alveg ótengdar. Línulegt samband eir einnin nærri ekkert, svo breyturnar eru mjög ótengdar.
+
+```{r}
+summary(dat$systkini_fjoldi)
+summary(dat$ferdatimi_skoli)
+```
+
+Hér sjáum við svo nokka hluti um hvora breytu, meðaltal, miðgildi, min, max o.fl.
