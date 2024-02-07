@@ -1,0 +1,14 @@
+---
+title: "Glósur fyrir próf"
+author: "Ásgerður Júlía Gunnarsdóttir"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+https://ahj.hi.is/handahofskenndar_spurningar_um_lifid.csv
+
