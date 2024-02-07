@@ -8,7 +8,247 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## R Markdown
+## Basic shit
+```{r message=FALSE}
+library(tidyverse) #notum alltaf
+library(ggplot2)  # fyrir gröf
+library(knitr) #fyrir töflur
+```
+
+## Úr verkefnum
+
+#### hop1
+```{r}
+dat <- read.table("nafn_a_skra.csv", sep = ";", header = T, dec = ",") #les inn gögn, geymi í breytunni dat
+
+dat <- mutate(dat, stefnumot = factor(stefnumot))
+dat <- mutate(dat, fri = factor(fri)) #breytir breytuni fri í factor breytu
+puls <- mutate(puls, bmi = thyngd/(haed/100)^2)
+
+levels(dat$stefnumot) <- c('uti', 'inni', 'inni', 'uti') #sameinum flokkana úr stefnumót í tvo flokka, inni eða úti
+
+dat$likamsraekt_dagar[dat$likamsraekt_dagar < 0|dat$likamsraekt_dagar>7] <- NA  #taka burt þau gildi sem eru óraunhæf
+
+```
+
+#### hop2, einst2
+
+```{r}
+ggplot(data = dat, aes(is, fill = is)) + 
+geom_bar() + labs(title = "Uppáhalds Ís", y = "fjöldi") + scale_fill_manual(values = c("#f542e6", "#452e2e", "#e3e3cf"))
+
+ggplot(data = dat, aes(x = is, y = likamsraekt_dagar)) +
+  geom_boxplot(fill = "pink", color = "yellow", alpha = 0.7) +
+  theme_minimal() +
+  labs(title = "Boxplot af Hreytingu nemenda og uppáhaldsís þeirra",
+       x = "Flokkur",
+       y = "Likamsraekt Dagar")
+
+
+library(dplyr)
+library(knitr)
+
+ice_cream_stats <- dat %>%
+  group_by(is) %>%
+  summarise(
+    Median = median(likamsraekt_dagar, na.rm = TRUE),
+    Lower_Quartile = quantile(likamsraekt_dagar, 0.25, na.rm = TRUE),
+    Upper_Quartile = quantile(likamsraekt_dagar, 0.75, na.rm = TRUE),
+    Mean = mean(likamsraekt_dagar, na.rm = TRUE),
+    SD = sd(likamsraekt_dagar, na.rm = TRUE),
+    Min = min(likamsraekt_dagar, na.rm = TRUE),
+    Max = max(likamsraekt_dagar, na.rm = TRUE)
+  )
+
+
+print(ice_cream_stats)
+
+kable(ice_cream_stats, format = "markdown", 
+      col.names = c("Ice Cream Category", "Median", "Lower Quartile", "Upper Quartile", "Mean", "SD", "Min", "Max"))
+
+ggplot(data = dat, aes(x = ferdatimi_skoli, y = systkini_fjoldi, color = systkini_fjoldi)) +
+  geom_point(shape = 10, size = 3, alpha = 0.6) +
+  
+  scale_color_gradient(low = "blue", high = "red") +
+ 
+  theme_minimal() +
+ 
+  labs(title = "Scatterplot of systkini_fjoldi by ferdatimi_skoli",
+       x = "Ferðatími í skóla (minutes)",
+       y = "Systkini fjöldi")
+
+
+correlation <- cor(dat$ferdatimi_skoli, dat$systkini_fjoldi, use = "complete.obs")
+
+model <- lm(systkini_fjoldi ~ ferdatimi_skoli, data = dat)
+slope <- coef(model)[2]
+
+
+
+residuals <- residuals(model)
+
+statistics_table <- data.frame(
+  "Statistic" = c("Correlation", "Slope" ),
+  "Value" = c(correlation, slope)
+)
+
+print(statistics_table)
+
+```
+
+## Úr glærum
+
+```{r}
+head(dat) # sýnir efstu sex línurnar í dat
+dim(dat) # skilar fjölda lína og dálka í dat
+names(dat) # skilar nöfn breyta í dat
+glimpse(dat) # skilar gerð breyta í dat
+
+is.na()  # Er gildi? T/F
+na.omit() #fjarlægir raðir með gildi NA
+
+```
+
+## Velja gildi úr töflu
+```{r}
+d.stae <- filter(puls, namskeid=="STAE209")
+
+d.stae.ha <- filter(puls, namskeid=="STAE209", haed>170)
+
+aldur.nota <- c(20,22,24)
+d.ald <- filter(puls, aldur%in%aldur.nota)
+```
+
+### Skipta talnabreytu upp í flokka
+```{r}
+puls <- mutate(puls, haed.flokkur =
+fct_recode(haed.flokkur,
+lágvaxin = "[0,160)", miðlungs = "[160,180)",
+hávaxin = "[180,210)"))
+
+```
+### Breyta röðun á flokkum flokkabreytu
+```{r}
+puls <- mutate(puls, haed.flokkur =
+parse_factor(haed.flokkur,
+levels=c("hávaxin", "miðlungs", "lágvaxin")))
+levels(puls$haed.flokkur)
+```
+
+### Sameina flokka flokkabreytu
+```{r}
+puls <- mutate(puls, haed.flokkur.s =
+fct_recode(haed.flokkur,
+lægri = "lágvaxin", lægri = "miðlungs", hærri = "hávaxin"))
+levels(puls$haed.flokkur.s)
+```
+
+## Myndrit
+```{r}
+
+ggplot(puls,aes(x=haed, y=thyngd)) + geom_point() #punktarit
+geom_smooth(method = 'lm', se=F) #hallalína
+
+geom_histogram(binwith=2) #stuðlarit með breydd 2
+
+geom_boxplot() #kassarit
+
+geom_bar()  #stöplarit
+ggplot(filter(puls, !is.na(inngrip)),aes(x=inngrip, fill = kyn)) +
+geom_bar(position='dodge') + xlab('Inngrip') + ylab('Fjöldi') + #stöplarit með súlu fyrir hvern flokk í flokkabreytu (td kvk/kk & ja/nei)
+scale_x_discrete(labels=c("Hljóp","Sat kyrr"))
+
+
+```
+
+Allar flokkabreytur eru strjálar.
+Talnabreytur geta verið samfelldar eða stjálar.
+Talnabreytur sem eru strjálar en taka mörg gildi meðhöndlum við eins og samfelldar breytur.
+
+Ein eða tvær strjálar breytur
+-Stöplarit
+
+Ein samfelldbreyta
+- Stuðlarit
+
+Ein samfelld, ein strjál
+-Kassarit
+
+Tvær samfelldar
+-Punktarit
+
+## Lýsistærðir
+```{r}
+table() # tíðnitöflur
+prop.table() # hlutföll
+
+mean() # meðaltal
+median() # miðgildi
+quantile() # fjórðungamörk
+summary() # fer eftir innihaldi...
+sd() # staðalfrávik
+var() # dreifni
+range() # spönn
+min() # lægsta gildi
+max() # hæsta gildi
+# Ef mælingar vantar þarf að gera ráðstafanir: na.rm=T
+
+tapply() #nafni á talnabreytu, nafni á flokkabreytu og nafninu á aðferðinni
+
+```
+
+```{r}
+library(dplyr) 
+summarise(puls, meðalpúls = mean(fyrriPuls, na.rm=T),
+meðalþyngd = mean(thyngd,na.rm=T), fjöldi = n())
+
+## # A tibble: 1 x 3
+## meðalpúls meðalþyngd fjöldi
+## <dbl> <dbl> <int>
+## 1 72.0 71.5 471
+summarise(filter(puls,!is.na(fyrriPuls), !is.na(thyngd)),
+meðalpúls = mean(fyrriPuls),
+meðalþyngd = mean(thyngd), fjöldi = n())
+## # A tibble: 1 x 3
+## meðalpúls meðalþyngd fjöldi
+## <dbl> <dbl> <int>
+## 1 72.3 71.3 444
+
+
+# summarise() með group_by()
+
+puls.lik<-group_by(puls,likamsraekt.flokkur)
+summarise(filter(puls.lik, !is.na(fyrriPuls)), meðaltal = mean(fyrriPuls),
+staðalfrávik = sd(fyrriPuls), fjöldi = n())
+
+## # A tibble: 4 x 4
+## likamsraekt.flokkur meðaltal staðalfrávik fjöldi
+## <fct> <dbl> <dbl> <int>
+## 1 Lítil 72.7 12.4 136
+## 2 Meðal 75.0 12.1 129
+## 3 Mikil 69.1 10.7 184
+## 4 <NA> 80 8.69 5
+
+```
+
 
 https://ahj.hi.is/handahofskenndar_spurningar_um_lifid.csv
+
+Þið getið svo annað hvort umlukið töflu skipanir með kable(), dæmi:
+
+kable(table(dat$breyta1, dat$breyta2))
+
+eða notað pípuna:
+
+table(dat$breyta1, dat$breyta2) %>% kable()
+
+
+## Bók
+```{r}
+str(dat) # á hvaða formi R skráir breytur
+length(dat$is) #hversu margar mælingar á is eru til
+
+```
+
+
 
