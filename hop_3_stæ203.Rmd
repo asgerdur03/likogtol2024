@@ -1,0 +1,61 @@
+---
+title: "Hópverkefni 3 STÆ203"
+author: "Ásgerður, Vilborg"
+date: "`r Sys.Date()`"
+output: 
+  prettydoc::html_pretty:
+    theme: cayman
+    highlight: github
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+#### Liður 1: Líkindadreifingar slembinna fyrirbæra
+
+-   Komið með dæmi um þrjú slembin fyrirbæri, X, Y og Z, eitt sem má lýsa með Poisson dreifingu, eitt sem má lýsa með tvíkostadreifingu og það þriðja sem má lýsa með normaldreifingu.
+
+-   Lítið á útkomu slembnu fyrirbæranna sem slembistærðirnar X, Y og Z og veljið heppileg gildi á stikum líkindadreifinganna sem lýsa þeim.
+
+-   Teiknið mynd af þéttifalli/massafalli hverrrar og einnar slembistærðar með því að herma 100 000 útkomur þeirra (með `rnorm`, `rbinom`eða `rpois`) og teikna graf með útkomunum.
+
+#### Liður 2: Búum til mörg lítil úrtök (n=10)
+
+-   Núna ætlið þið skoða hvað myndi gerast ef þið mynduð framkvæma tilraun þar sem þið veljið úrtak af stærð **10** fyrir hverja af slembistærðunum X, Y og Z, þ.e.a.s. þrjú ólík úrtök, hvert með 10 útkomum.
+
+-   Fyrir hvert úrtak ætlið þið að reikna lýsistærðirnar meðaltal og miðgildi.
+
+-   Þetta ætlið þið að endurtaka mjög oft (100 000 sinnum) og sjá hve mikið lýsistærðirnar geta breyst í hvert skipti sem nýtt úrtak er valið.
+
+-   Ein leið til þess er að búa til gagnatöflu með sex dálkum en 100 000 línum. Einn dálkur fyrir hverja samsetningu af slembistærð og lýsistærð og eina línu fyrir hvert úrtak. Hér er kóðabútur til að koma ykkur af stað:
+
+```{r}
+dat10 <- NULL dat10$medal_x <- replicate(100000, rnorm(10,0,1), mean) dat10$midgildi_x <- replicate(100000, rnorm(10,0,1), median) dat10$medal_y <- replicate(100000, rpois(10,1), mean)
+```
+
+#### Liður 3: Berum saman slembistærðir og lýsistærðir
+
+-   Núna ætlið þið að áætla úrtaksdreifingu lýsistærðanna sem þið voruð að reikna með því að teikna stuðlarit hvers og eins dálks (alls sex gröf).
+
+-   Fyrir hvaða slembistærðir og lýsistærðir virðist úrtaksdreifing lýsistærðanna samfelld?
+
+-   Fyrir hvaða slembistærðir og lýsistærðir virðist úrtaksdreifing lýsistærðanna samhverf?
+
+-   Reiknið meðaltal hvers og eins dálks. Hversu líkt er það væntigildi slembistærðanna X, Y og Z í hverju tilviki?
+
+-   Reiknið dreifni hvers og eins dálks. Er mikill munur er á dreifni úrtaksdreifingu meðaltals og dreifni úrtaksdreifingu miðgildis sömu slembistærðar? 
+
+#### Liður 4: Stækkum úrtakið (n=30)
+
+-   Endurtakið liði 2 og 3, nema nú fyrir úrtak af stærð 30.
+
+#### Liður 5: Stækkum úrtakið enn meir (n=100)
+
+-   Endurtakið liði 2 og 3, nema nú fyrir úrtak af stærð 100.
+
+#### Liður 6: Berum saman úrtaksstærðir
+
+-   Beriið núna saman úrtaksdreifingu **meðaltals** fyrir slembistærðirnar X, Y og Z fyrir þessar þrjár ólíku úrtaksstærðir. Hversu stórt þurfti úrtakið að vera (n=10, n=30 eða n=100) til að úrtaksdreifing meðaltalsins líktist normaldreifingu?
+
+#### Framlag hópmeðlima
