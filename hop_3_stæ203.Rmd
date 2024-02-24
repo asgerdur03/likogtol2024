@@ -12,6 +12,12 @@ output:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+```{r}
+library(tidyverse)
+library(ggplot2)
+set.seed(1)
+```
+
 #### Liður 1: Líkindadreifingar slembinna fyrirbæra
 
 -   Komið með dæmi um þrjú slembin fyrirbæri, X, Y og Z, eitt sem má lýsa með Poisson dreifingu, eitt sem má lýsa með tvíkostadreifingu og það þriðja sem má lýsa með normaldreifingu.
@@ -19,6 +25,16 @@ knitr::opts_chunk$set(echo = TRUE)
 -   Lítið á útkomu slembnu fyrirbæranna sem slembistærðirnar X, Y og Z og veljið heppileg gildi á stikum líkindadreifinganna sem lýsa þeim.
 
 -   Teiknið mynd af þéttifalli/massafalli hverrrar og einnar slembistærðar með því að herma 100 000 útkomur þeirra (með `rnorm`, `rbinom`eða `rpois`) og teikna graf með útkomunum.
+
+```{r }
+X <- rpois(100000, 1) # fjöldi veikindadaga á mánuði hjá stafsfólki
+Y <- rnorm(100000, 1,10) # Meðalhiti á köldum stað
+Z <- rbinom(100000,3,0.1) # Að hitta 3 körfur í röð, ef hvart kast er 10% líkur á að hitta
+
+hist(X, breaks = 30, col = "lightblue", main = "Poisson dreifing", xlab = "Veikindadagar", ylab = "Starfsfólk")
+hist(Y, breaks = 30, col = "lightgreen", main = "Normal dreifing", xlab = "Hitastig", ylab = "Tíðni")
+hist(Z, breaks = 30, col = "lightpink", main = "Binomial dreifing", xlab = "Körfur hittar", ylab = "Tíðni")
+```
 
 #### Liður 2: Búum til mörg lítil úrtök (n=10)
 
@@ -30,8 +46,29 @@ knitr::opts_chunk$set(echo = TRUE)
 
 -   Ein leið til þess er að búa til gagnatöflu með sex dálkum en 100 000 línum. Einn dálkur fyrir hverja samsetningu af slembistærð og lýsistærð og eina línu fyrir hvert úrtak. Hér er kóðabútur til að koma ykkur af stað:
 
+```{r }
+dat10 <- data.frame(
+  medal_x = replicate(100000, mean(rnorm(10, 0, 1))),      # Meðaltal úrtaks fyrir X
+  midgildi_x = replicate(100000, median(rnorm(10, 0, 1))), # Miðgildi úrtaks fyrir X
+  
+  medal_y = replicate(100000, mean(rpois(10, 1))),         # Meðaltal úrtaks fyrir Y
+  midgildi_y = replicate(100000, median(rpois(10, 1))),    # Miðgildi úrtaks fyrir Y
+  
+  medal_z = replicate(100000, mean(rbinom(10, 3, 0.1))),   # Meðaltal úrtaks fyrir Z
+  midgildi_z = replicate(100000, median(rbinom(10, 3, 0.1))) # Miðgildi úrtaks fyrir Z
+)
+
+
+```
+
 ```{r}
-dat10 <- NULL dat10$medal_x <- replicate(100000, rnorm(10,0,1), mean) dat10$midgildi_x <- replicate(100000, rnorm(10,0,1), median) dat10$medal_y <- replicate(100000, rpois(10,1), mean)
+medaltal <- colMeans(dat10)
+print(medaltal)
+```
+
+```{r}
+urtak10 <- sample_n(dat10, 10)
+knitr::kable(urtak10)
 ```
 
 #### Liður 3: Berum saman slembistærðir og lýsistærðir
@@ -44,18 +81,192 @@ dat10 <- NULL dat10$medal_x <- replicate(100000, rnorm(10,0,1), mean) dat10$midg
 
 -   Reiknið meðaltal hvers og eins dálks. Hversu líkt er það væntigildi slembistærðanna X, Y og Z í hverju tilviki?
 
--   Reiknið dreifni hvers og eins dálks. Er mikill munur er á dreifni úrtaksdreifingu meðaltals og dreifni úrtaksdreifingu miðgildis sömu slembistærðar? 
+-   Reiknið dreifni hvers og eins dálks. Er mikill munur er á dreifni úrtaksdreifingu meðaltals og dreifni úrtaksdreifingu miðgildis sömu slembistærðar?
+
+```{r}
+ggplot(urtak10, aes(x = medal_x)) +
+  geom_histogram(fill = "skyblue", color = "black", bins = 30) +
+  labs(title = "Histogram of medal_x", x = "medal_x", y = "Fjöldi") +
+  theme_minimal()
+
+ggplot(urtak10, aes(x = midgildi_x)) +
+  geom_histogram(fill = "skyblue", color = "black", bins = 30) +
+  labs(title = "Histogram of midgildi_x", x = "midgildi_x", y = "Fjöldi") +
+  theme_minimal()
+
+ggplot(urtak10, aes(x = medal_y)) +
+  geom_histogram(fill = "skyblue", color = "black", bins = 30) +
+  labs(title = "Histogram of medal_y", x = "medal_y", y = "Fjöldi") +
+  theme_minimal()
+
+ggplot(urtak10, aes(x = midgildi_y)) +
+  geom_histogram(fill = "skyblue", color = "black", bins = 30) +
+  labs(title = "Histogram of midgildi_y", x = "midgildi_y", y = "Fjöldi") +
+  theme_minimal()
+
+ggplot(urtak10, aes(x = medal_z)) +
+  geom_histogram(fill = "skyblue", color = "black", bins = 30) +
+  labs(title = "Histogram of medal_z", x = "medal_z", y = "Fjöldi") +
+  theme_minimal()
+
+ggplot(urtak10, aes(x = midgildi_z)) +
+  geom_histogram(fill = "skyblue", color = "black", bins = 10) +
+  labs(title = "Histogram of midgildi_z", x = "midgildi_z", y = "Fjöldi") +
+  theme_minimal()
+
+
+
+```
+
+```{r}
+mean10 <- colMeans(urtak10) #meðaltal
+var10 <- apply(urtak10, 2, var) #dreifni
+
+tafla10 <- data.frame(Mean = mean10, Variance = var10)
+
+knitr::kable(tafla10)
+```
+
+Samhverf: midgilidi_x
+
+Samfelld: medal_z
+
+Með því að bera saman meðaltöl X,Y og Z fundum við út að Y og Z meðaltöl voru nálægt væntigildinu en X var mjög langt frá því.
+
+Mikill munur er á dreifni meðaltals og miðgildis fyrir allar slembistærðirnar.
 
 #### Liður 4: Stækkum úrtakið (n=30)
 
 -   Endurtakið liði 2 og 3, nema nú fyrir úrtak af stærð 30.
 
+```{r}
+urtak30 <- sample_n(dat10, 30)
+knitr::kable(urtak30)
+```
+
+```{r}
+ggplot(urtak30, aes(x = medal_x)) +
+  geom_histogram(fill = "pink", color = "black", bins = 30) +
+  labs(title = "Histogram of medal_x", x = "medal_x", y = "Fjöldi") +
+  theme_minimal()
+
+ggplot(urtak30, aes(x = midgildi_x)) +
+  geom_histogram(fill = "pink", color = "black", bins = 30) +
+  labs(title = "Histogram of midgildi_x", x = "midgildi_x", y = "Fjöldi") +
+  theme_minimal()
+
+ggplot(urtak30, aes(x = medal_y)) +
+  geom_histogram(fill = "pink", color = "black", bins = 30) +
+  labs(title = "Histogram of medal_y", x = "medal_y", y = "Fjöldi") +
+  theme_minimal()
+
+ggplot(urtak30, aes(x = midgildi_y)) +
+  geom_histogram(fill = "pink", color = "black", bins = 30) +
+  labs(title = "Histogram of midgildi_y", x = "midgildi_y", y = "Fjöldi") +
+  theme_minimal()
+
+ggplot(urtak30, aes(x = medal_z)) +
+  geom_histogram(fill = "pink", color = "black", bins = 30) +
+  labs(title = "Histogram of medal_z", x = "medal_z", y = "Fjöldi") +
+  theme_minimal()
+
+ggplot(urtak30, aes(x = midgildi_z)) +
+  geom_histogram(fill = "pink", color = "black", bins = 10) +
+  labs(title = "Histogram of midgildi_z", x = "midgildi_z", y = "Fjöldi") +
+  theme_minimal()
+
+```
+
+```{r}
+mean30 <- colMeans(urtak30) #meðaltal
+var30 <- apply(urtak30, 2, var) #dreifni
+
+tafla30 <- data.frame(Mean = mean30, Variance = var30)
+
+knitr::kable(tafla30)
+```
+
+Samfelld: medal_z
+
+Samhverf: midgildi_x, medal_z
+
+Nú er meðaltal X nær væntigildinu, enn ekki nærri því jafn nálægt og Y og Z, sem eru aftur heldur nálægt væntigildum sínum
+
+Sjáum að munurinn á drefini meðaltals og miðgildis sömu slembistærðar er heldur stór, en dreifnin á miðgildinu er u.þ.b helmingin meiri en á meðaltali sömu stærðar
+
 #### Liður 5: Stækkum úrtakið enn meir (n=100)
 
 -   Endurtakið liði 2 og 3, nema nú fyrir úrtak af stærð 100.
+
+```{r}
+urtak100 <- sample_n(dat10, 100)
+knitr::kable(urtak100)
+```
+
+```{r}
+ggplot(urtak100, aes(x = medal_x)) +
+  geom_histogram(fill = "green", color = "black", bins = 30) +
+  labs(title = "Histogram of medal_x", x = "medal_x", y = "Fjöldi") +
+  theme_minimal()
+
+ggplot(urtak100, aes(x = midgildi_x)) +
+  geom_histogram(fill = "green", color = "black", bins = 30) +
+  labs(title = "Histogram of midgildi_x", x = "midgildi_x", y = "Fjöldi") +
+  theme_minimal()
+
+ggplot(urtak100, aes(x = medal_y)) +
+  geom_histogram(fill = "green", color = "black", bins = 30) +
+  labs(title = "Histogram of medal_y", x = "medal_y", y = "Fjöldi") +
+  theme_minimal()
+
+ggplot(urtak100, aes(x = midgildi_y)) +
+  geom_histogram(fill = "green", color = "black", bins = 30) +
+  labs(title = "Histogram of midgildi_y", x = "midgildi_y", y = "Fjöldi") +
+  theme_minimal()
+
+ggplot(urtak100, aes(x = medal_z)) +
+  geom_histogram(fill = "green", color = "black", bins = 30) +
+  labs(title = "Histogram of medal_z", x = "medal_z", y = "Fjöldi") +
+  theme_minimal()
+
+ggplot(urtak100, aes(x = midgildi_z)) +
+  geom_histogram(fill = "green", color = "black", bins = 10) +
+  labs(title = "Histogram of midgildi_z", x = "midgildi_z", y = "Fjöldi") +
+  theme_minimal()
+
+```
+
+```{r}
+mean100 <- colMeans(urtak100) #meðaltal
+var100 <- apply(urtak100, 2, var) #dreifni
+
+tafla100 <- data.frame(Mean = mean100, Variance = var100)
+
+knitr::kable(tafla100)
+```
+
+Samfelld: medal_x
+
+Samhverf: medal_x, medal_y, midgildi_y, medal_z
+
+Þessi breytistærð er án efa sú sem skilaði meðaltali næst væntigildinu fyrir allar stærðirnar. Y og Z eru nánæst þær sömu, og X hefur aldrei verið nær.
+
+Sjáum að munurinn á drefini meðaltals og miðgildis sömu slembistærðar er heldur stór, en dreifnin á miðgildinu er u.þ.b helmingin meiri en á meðaltali sömu stærðar
 
 #### Liður 6: Berum saman úrtaksstærðir
 
 -   Beriið núna saman úrtaksdreifingu **meðaltals** fyrir slembistærðirnar X, Y og Z fyrir þessar þrjár ólíku úrtaksstærðir. Hversu stórt þurfti úrtakið að vera (n=10, n=30 eða n=100) til að úrtaksdreifing meðaltalsins líktist normaldreifingu?
 
-#### Framlag hópmeðlima
+Fyrir n=10 leit úrtaksdreifing meðaltals ekkert eins og normaldreifing.
+
+Þegar úrtakið stækkaði í n= 30, byrjaði úrtaksdreifingin að líta aðeins út eins og normaldreifing, en þó ekki alveg.
+
+Það var ekki fyrr en í n=100, þegar við gátum verið vissar að grafið sem við sáum var normaldreift
+
+#### Framlag hópameðlima
+
+Báðir meðlimir unnu saman að öllum liðum, en með áherslu á ólýka liði.
+
+Vilborg: 1, 2, 6
+
+Ásgerður: 3, 4, 5
