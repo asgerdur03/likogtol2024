@@ -1,0 +1,73 @@
+---
+title: "Hópverkefni 4"
+author: "Ásgerður og Vilborg"
+date: "`r Sys.Date()`"
+output: 
+  prettydoc::html_pretty:
+    theme: cayman
+    highlight: github
+editor_options: 
+  markdown: 
+    wrap: 72
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+```
+
+```{r}
+library(tidyverse)
+library(ggplot2)
+```
+
+#### Liður 1
+
+Skoðið fyrst eina flokkabreytu úr spurningalistanum Handahófskenndar
+spurningar um lífið.
+
+-   Teiknið graf sem lýsir útkomum flokkabreytunnar.
+-   Tilgreinið hvaða útkoma flokkabreytunnar var algengust. Reiknið 95%
+    öryggisbil fyrir hlutfall tilvika þegar flokkabreytan hlýtur þessa
+    útkomu (köllum þetta hlutfall $p$).
+-   Lýsið því hvað yrðingin: $H_{0}: p = 0.5$ þýðir
+-   Notið 95% öryggisbilið sem þið reiknuðuð til að álykta hvort þið
+    hafnið þessari núlltilgátu eða ekki.
+
+#### Liður 2
+
+Skoðið aftur sömu flokkabreytu og þið könnuðuð í Lið 1.
+
+-   Notið skipunina facet_grid til að teikna flokkabreytuna annars vegar
+    fyrir nemendur sem eru í námskeiðinu STÆ209G og hins vegar fyrir
+    aðra nemendur.
+
+-   Látum $\hat{p}_{1}$ vera hlutfall tilvika þegar flokkabreytan hlýtur
+    útkomuna úr lið 1 meðal nemenda í námskeiðinu STÆ209G en
+    $\hat{p}_{2}$ vera hlutfall tilvika þegar flokkabreytan hlýtur
+    útkomuna úr lið 1 meðal annarra nemenda.
+
+-   Lýsið muninum á $p_{1}$ og $\hat{p}_{1}$ (takið eftir hattinum).
+
+-   Lýsið því hvað núlltilgátan: $H_{0}: p_1 = p_2$ þýðir.
+
+-   Framkvæmið viðeigandi tilgátupróf til að prófa þá núlltilgátu og
+    túlkið niðurstöðuna.
+
+#### Liður 3
+
+Skoðið núna tvær nýjar flokkabreytur úr spurningalistanum
+*Handahófskenndar spurningar um lífið*.
+
+-   Teiknið graf sem lýsir samspili þessara tveggja breyta
+
+-   Framkvæmið viðeigandi tilgátupróf til að kanna hvort það séu tengsl
+    milli þessara tveggja breyta
+
+-   Túlkið niðurstöðuna
+
+#### Framlag hópmeðlima
+
+Ásgerður:
+
+Vilborg:
