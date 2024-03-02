@@ -12,7 +12,7 @@
 
 <meta name="author" content="Ásgerður og Vilborg" />
 
-<meta name="date" content="2024-02-27" />
+<meta name="date" content="2024-03-02" />
 
 <title>Hópverkefni 4</title>
 
@@ -150,7 +150,7 @@ code span.ot { color: #007020; }
 <section class="page-header">
 <h1 class="title toc-ignore project-name">Hópverkefni 4</h1>
 <h4 class="author project-author">Ásgerður og Vilborg</h4>
-<h4 class="date project-date">2024-02-27</h4>
+<h4 class="date project-date">2024-03-02</h4>
 </section>
 
 
@@ -168,43 +168,107 @@ code span.ot { color: #007020; }
 ## ✖ dplyr::lag()    masks stats::lag()
 ## ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span></code></pre></div>
-<div id="liður-1" class="section level4">
-<h4>Liður 1</h4>
+<div id="liður-1" class="section level3">
+<h3>Liður 1</h3>
 <p>Skoðið fyrst eina flokkabreytu úr spurningalistanum Handahófskenndar
 spurningar um lífið.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">read.table</span>(<span class="st">&quot;spurningar_um_lifid_24.csv&quot;</span>, <span class="at">sep =</span> <span class="st">&quot;;&quot;</span>, <span class="at">header =</span> T, <span class="at">dec =</span> <span class="st">&quot;,&quot;</span>)</span>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">mutate</span>(dat, <span class="at">hljodfaeri =</span> <span class="fu">factor</span>(hljodfaeri))</span>
+<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">mutate</span>(dat, <span class="at">namskeid =</span> <span class="fu">factor</span>(namskeid))</span></code></pre></div>
 <ul>
 <li>Teiknið graf sem lýsir útkomum flokkabreytunnar.</li>
-<li>Tilgreinið hvaða útkoma flokkabreytunnar var algengust. Reiknið 95%
-öryggisbil fyrir hlutfall tilvika þegar flokkabreytan hlýtur þessa
-útkomu (köllum þetta hlutfall <span class="math inline">\(p\)</span>).</li>
-<li>Lýsið því hvað yrðingin: <span class="math inline">\(H_{0}: p =
-0.5\)</span> þýðir</li>
+</ul>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> dat, <span class="fu">aes</span>(hljodfaeri, <span class="at">fill =</span> hljodfaeri)) <span class="sc">+</span> </span>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a><span class="fu">geom_bar</span>() <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Spilaru á hljóðfæri&quot;</span>, <span class="at">y =</span> <span class="st">&quot;fjöldi&quot;</span>) <span class="sc">+</span> <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">&quot;lightblue&quot;</span>, <span class="st">&quot;pink&quot;</span>))</span></code></pre></div>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
+<ul>
+<li><p>Tilgreinið hvaða útkoma flokkabreytunnar var algengust. Reiknið
+95% öryggisbil fyrir hlutfall tilvika þegar flokkabreytan hlýtur þessa
+útkomu (köllum þetta hlutfall <span class="math inline">\(p\)</span>).</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="fu">table</span>(dat<span class="sc">$</span>hljodfaeri)</span></code></pre></div>
+<pre><code>## 
+## Rangt  Rétt 
+##   142   104</code></pre>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a><span class="fu">binom.test</span>(<span class="fu">table</span>(dat<span class="sc">$</span>hljodfaeri))</span></code></pre></div>
+<pre><code>## 
+##  Exact binomial test
+## 
+## data:  table(dat$hljodfaeri)
+## number of successes = 142, number of trials = 246, p-value = 0.01814
+## alternative hypothesis: true probability of success is not equal to 0.5
+## 95 percent confidence interval:
+##  0.5128524 0.6397351
+## sample estimates:
+## probability of success 
+##              0.5772358</code></pre></li>
+<li><p>Lýsið því hvað yrðingin: <span class="math inline">\(H_{0}: p =
+0.5\)</span> þýðir</p></li>
+</ul>
+<p><em>Yrðingin þýðir að núlltilgátan okkar sé að hlutfall þýðisins sé
+jafnt 0.5, eða að hlutfall þýðisins sé skipt 50/50 milli
+svarmöguleika.</em></p>
+<ul>
 <li>Notið 95% öryggisbilið sem þið reiknuðuð til að álykta hvort þið
 hafnið þessari núlltilgátu eða ekki.</li>
 </ul>
+<p><em>Við sjáum að 95% öryggisbilið okkar inniheldur ekki</em> <span class="math inline">\(0.5\)</span>, <em>svo við höfnum núlltilgátuni,
+þar sem neðri mörkin eru hærri en 0.5 &lt; 0.5128524</em></p>
 </div>
-<div id="liður-2" class="section level4">
-<h4>Liður 2</h4>
+<div id="liður-2" class="section level3">
+<h3>Liður 2</h3>
 <p>Skoðið aftur sömu flokkabreytu og þið könnuðuð í Lið 1.</p>
 <ul>
 <li><p>Notið skipunina facet_grid til að teikna flokkabreytuna annars
 vegar fyrir nemendur sem eru í námskeiðinu STÆ209G og hins vegar fyrir
-aðra nemendur.</p></li>
+aðra nemendur.</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a><span class="fu">ggplot</span>(dat, <span class="fu">aes</span>(<span class="at">x=</span> hljodfaeri))<span class="sc">+</span><span class="fu">geom_bar</span>(<span class="at">color=</span><span class="st">&quot;black&quot;</span>, <span class="at">fill=</span><span class="st">&quot;green&quot;</span>)<span class="sc">+</span><span class="fu">facet_grid</span>(. <span class="sc">~</span> namskeid)<span class="sc">+</span></span>
+<span id="cb10-2"><a href="#cb10-2" tabindex="-1"></a><span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Hljóðfærakunnátta eftir námskeiði&quot;</span>, <span class="at">y =</span> <span class="st">&quot;Fjöldi&quot;</span>, <span class="at">x=</span> <span class="st">&quot;Kunna á hljóðfæri?&quot;</span>) </span></code></pre></div>
+<p><img src="data:image/png;base64,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" /><!-- --></p></li>
 <li><p>Látum <span class="math inline">\(\hat{p}_{1}\)</span> vera
 hlutfall tilvika þegar flokkabreytan hlýtur útkomuna úr lið 1 meðal
 nemenda í námskeiðinu STÆ209G en <span class="math inline">\(\hat{p}_{2}\)</span> vera hlutfall tilvika þegar
-flokkabreytan hlýtur útkomuna úr lið 1 meðal annarra nemenda.</p></li>
+flokkabreytan hlýtur útkomuna úr lið 1 meðal annarra nemenda.</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a><span class="fu">prop.table</span>(<span class="fu">table</span>(dat<span class="sc">$</span>namskeid,dat<span class="sc">$</span>hljodfaeri), <span class="at">margin=</span><span class="dv">1</span>)</span></code></pre></div>
+<pre><code>##         
+##              Rangt      Rétt
+##   STÆ203 0.5704225 0.4295775
+##   STÆ209 0.5865385 0.4134615</code></pre>
+<p><span class="math inline">\(\hat{p}_{1}=0.5704225\)</span></p>
+<p><span class="math inline">\(\hat{p}_{2}=0.5865385\)</span></p></li>
 <li><p>Lýsið muninum á <span class="math inline">\(p_{1}\)</span> og
 <span class="math inline">\(\hat{p}_{1}\)</span> (takið eftir
 hattinum).</p></li>
-<li><p>Lýsið því hvað núlltilgátan: <span class="math inline">\(H_{0}:
-p_1 = p_2\)</span> þýðir.</p></li>
-<li><p>Framkvæmið viðeigandi tilgátupróf til að prófa þá núlltilgátu og
-túlkið niðurstöðuna.</p></li>
 </ul>
+<p><em>Munurinn er að</em> <span class="math inline">\(p_1\)</span>
+<em>táknar líkurnar á að atburður eigi sér stað, en</em> <span class="math inline">\(\hat {p_1}\)</span> <em>er líkurnar líkurnar í
+ákveðnu úrtaki.</em></p>
+<ul>
+<li>Lýsið því hvað núlltilgátan: <span class="math inline">\(H_{0}: p_1
+= p_2\)</span> þýðir.</li>
+</ul>
+<p><em>núlltilgátan þýðir að við skoðum hvort hlutföll beggja þýða séu
+jöfn, eða eins.</em></p>
+<ul>
+<li><p>Framkvæmið viðeigandi tilgátupróf til að prófa þá núlltilgátu og
+túlkið niðurstöðuna.</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" tabindex="-1"></a><span class="fu">prop.test</span>(<span class="fu">table</span>(dat<span class="sc">$</span>namskeid,dat<span class="sc">$</span>hljodfaeri))</span></code></pre></div>
+<pre><code>## 
+##  2-sample test for equality of proportions with continuity correction
+## 
+## data:  table(dat$namskeid, dat$hljodfaeri)
+## X-squared = 0.014917, df = 1, p-value = 0.9028
+## alternative hypothesis: two.sided
+## 95 percent confidence interval:
+##  -0.1492912  0.1170593
+## sample estimates:
+##    prop 1    prop 2 
+## 0.5704225 0.5865385</code></pre></li>
+</ul>
+<p><em>Sjáum hér að</em> <span class="math inline">\(p_1 \neq
+p_2\)</span>, <em>svo að núlltigátan stenst ekki.</em></p>
 </div>
-<div id="liður-3" class="section level4">
-<h4>Liður 3</h4>
+<div id="liður-3" class="section level3">
+<h3>Liður 3</h3>
 <p>Skoðið núna tvær nýjar flokkabreytur úr spurningalistanum
 <em>Handahófskenndar spurningar um lífið</em>.</p>
 <ul>
@@ -214,10 +278,10 @@ tengsl milli þessara tveggja breyta</p></li>
 <li><p>Túlkið niðurstöðuna</p></li>
 </ul>
 </div>
-<div id="framlag-hópmeðlima" class="section level4">
-<h4>Framlag hópmeðlima</h4>
-<p>Ásgerður:</p>
-<p>Vilborg:</p>
+<div id="framlag-hópmeðlima" class="section level3">
+<h3>Framlag hópmeðlima</h3>
+<p>Ásgerður: 1,2</p>
+<p>Vilborg: 2,3</p>
 </div>
 </section>
 

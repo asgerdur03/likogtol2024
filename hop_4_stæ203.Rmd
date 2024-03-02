@@ -21,20 +21,47 @@ library(tidyverse)
 library(ggplot2)
 ```
 
-#### Liður 1
+### Liður 1
 
 Skoðið fyrst eina flokkabreytu úr spurningalistanum Handahófskenndar
 spurningar um lífið.
 
+```{r}
+dat <- read.table("spurningar_um_lifid_24.csv", sep = ";", header = T, dec = ",")
+dat <- mutate(dat, hljodfaeri = factor(hljodfaeri))
+dat <- mutate(dat, namskeid = factor(namskeid))
+```
+
 -   Teiknið graf sem lýsir útkomum flokkabreytunnar.
+
+```{r}
+ggplot(data = dat, aes(hljodfaeri, fill = hljodfaeri)) + 
+geom_bar() + labs(title = "Spilaru á hljóðfæri", y = "fjöldi") + scale_fill_manual(values = c("lightblue", "pink"))
+
+```
+
 -   Tilgreinið hvaða útkoma flokkabreytunnar var algengust. Reiknið 95%
     öryggisbil fyrir hlutfall tilvika þegar flokkabreytan hlýtur þessa
     útkomu (köllum þetta hlutfall $p$).
+
+    ```{r}
+    table(dat$hljodfaeri)
+    binom.test(table(dat$hljodfaeri))
+    ```
+
 -   Lýsið því hvað yrðingin: $H_{0}: p = 0.5$ þýðir
+
+*Yrðingin þýðir að núlltilgátan okkar sé að hlutfall þýðisins sé jafnt
+0.5, eða að hlutfall þýðisins sé skipt 50/50 milli svarmöguleika.*
+
 -   Notið 95% öryggisbilið sem þið reiknuðuð til að álykta hvort þið
     hafnið þessari núlltilgátu eða ekki.
 
-#### Liður 2
+*Við sjáum að 95% öryggisbilið okkar inniheldur ekki* $0.5$, *svo við
+höfnum núlltilgátuni, þar sem neðri mörkin eru hærri en 0.5 \<
+0.5128524*
+
+### Liður 2
 
 Skoðið aftur sömu flokkabreytu og þið könnuðuð í Lið 1.
 
@@ -42,19 +69,46 @@ Skoðið aftur sömu flokkabreytu og þið könnuðuð í Lið 1.
     fyrir nemendur sem eru í námskeiðinu STÆ209G og hins vegar fyrir
     aðra nemendur.
 
+    ```{r}
+    ggplot(dat, aes(x= hljodfaeri))+geom_bar(color="black", fill="green")+facet_grid(. ~ namskeid)+
+    labs(title = "Hljóðfærakunnátta eftir námskeiði", y = "Fjöldi", x= "Kunna á hljóðfæri?") 
+
+    ```
+
 -   Látum $\hat{p}_{1}$ vera hlutfall tilvika þegar flokkabreytan hlýtur
     útkomuna úr lið 1 meðal nemenda í námskeiðinu STÆ209G en
     $\hat{p}_{2}$ vera hlutfall tilvika þegar flokkabreytan hlýtur
     útkomuna úr lið 1 meðal annarra nemenda.
 
+    ```{r}
+    prop.table(table(dat$namskeid,dat$hljodfaeri), margin=1)
+
+    ```
+
+    $\hat{p}_{1}=0.5704225$
+
+    $\hat{p}_{2}=0.5865385$
+
 -   Lýsið muninum á $p_{1}$ og $\hat{p}_{1}$ (takið eftir hattinum).
 
+*Munurinn er að* $p_1$ *táknar líkurnar á að atburður eigi sér stað, en*
+$\hat {p_1}$ *er líkurnar líkurnar í ákveðnu úrtaki.*
+
 -   Lýsið því hvað núlltilgátan: $H_{0}: p_1 = p_2$ þýðir.
+
+*núlltilgátan þýðir að við skoðum hvort hlutföll beggja þýða séu jöfn,
+eða eins.*
 
 -   Framkvæmið viðeigandi tilgátupróf til að prófa þá núlltilgátu og
     túlkið niðurstöðuna.
 
-#### Liður 3
+    ```{r}
+    prop.test(table(dat$namskeid,dat$hljodfaeri))
+    ```
+
+*Sjáum hér að* $p_1 \neq p_2$, *svo að núlltigátan stenst ekki.*
+
+### Liður 3
 
 Skoðið núna tvær nýjar flokkabreytur úr spurningalistanum
 *Handahófskenndar spurningar um lífið*.
@@ -66,8 +120,8 @@ Skoðið núna tvær nýjar flokkabreytur úr spurningalistanum
 
 -   Túlkið niðurstöðuna
 
-#### Framlag hópmeðlima
+### Framlag hópmeðlima
 
-Ásgerður:
+Ásgerður: 1,2
 
-Vilborg:
+Vilborg: 2,3
