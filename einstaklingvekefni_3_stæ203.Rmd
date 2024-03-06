@@ -1,0 +1,72 @@
+---
+title: "Einstaklingsverkefni 3"
+author: "ÁJG"
+date: "`r Sys.Date()`"
+output: 
+ prettydoc::html_pretty:
+    theme: cayman
+    highlight: github
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r echo=T, message=F, warning=FALSE}
+library(tidyverse)
+library(ggplot2)
+```
+
+```{r}
+
+library(readr) # Lesum inn .csv skjal með upplýsingum um lestarferðir
+subs <- read_csv("NYC_subway_traffic.csv")
+
+```
+
+#### Liður 1: Fjöldi innstiga á tiltekna lestarstöð klukkan 08
+
+Breytan `entries.08` lýsir fjölda innstiga í tiltekna lest á tiltekinni lestarstöð klukkan 08:00 um morgun.
+
+-   Veljið ykkur eina lestarstöð (Stop Name) og búið til minna gagnasafn með eingöngu mælingum frá þeirri lestarstöð.
+
+    ```{r}
+    stop_23st <- subs %>%
+                  filter(`Stop Name` == "23 St")
+
+    ```
+
+-   Teiknið graf sem sýnir fjölda innstiga klukkan 08 á þá lestarstöð.
+
+    ```{r}
+    ggplot(stop_23st, aes( x= entries.08))+geom_bar()
+    # bara svona? eða fjöldi miðað við ehv annað.
+    # nora histogram frekar? ekki eins margar súlur
+
+    ```
+
+-   Reiknið meðalfjölda innstiga á þessa tilteknu lestarstöð ásamt 95% öryggisbili
+
+-   Lýsið útkomunni stuttlega
+
+#### Liður 2: Samanburður á fjölda innstiga eftir gerð brautarpalla
+
+Breytan `structure`lýsir því hvort brautarpallur tiltekinnar lestarstöðvar sé upphækkaður (elevated) eða neðanjarðar (subway). 
+
+-   Veljið ykkur eina dagsetningu og búið til minna gagnasafn með eingöngu mælingum frá þessari dagsetningu (en frá öllum lestarstöðvum).
+
+-   Teiknið graf sem ber saman fjölda innstiga á upphækkuðum brautarpöllum samanborið við neðanjarðarbrautarpalla.
+
+-   Reiknið meðalfjölda innstiga klukkan 08 á morgnana fyrir hvora gerð af brautarpalli.
+
+-   Getið þið fullyrt að það sé munur á meðalfjölda innstiga eftir því af hvaða gerð brautarpallurinn er? Framkvæmið viðeigandi tilgátupróf til að kanna það og lýsið útkomunni
+
+#### Liður 3: Samanburður á fjölda innstiga að morgni eða síðdegis
+
+Breytan `entries.16` lýsir fjölda innstiga í tiltekna lest á tiltekinni lestarstöð klukkan 16:00 síðdegis.
+
+-   Veljið ykkur eitthvað eitt hverfi (Neighborhood) og búið til minna gagnasafn með eingöngu mælingum frá þessu hverfi.
+
+-   Teiknið graf sem ber saman fjölda innstiga klukkan 08 á móti fjölda innstiga klukkan 16 í þessu hverfi.
+
+-   Hvort eru fleiri innstig að morgni eða síðdegis í þessu hverfi? Framkvæmið viðeigandi tilgátupróf til að kanna það og lýsið útkomunni.
