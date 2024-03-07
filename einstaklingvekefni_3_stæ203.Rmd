@@ -39,15 +39,26 @@ Breytan `entries.08` lýsir fjölda innstiga í tiltekna lest á tiltekinni lest
 -   Teiknið graf sem sýnir fjölda innstiga klukkan 08 á þá lestarstöð.
 
     ```{r}
-    ggplot(stop_23st, aes( x= entries.08))+geom_bar()
-    # bara svona? eða fjöldi miðað við ehv annað.
-    # nora histogram frekar? ekki eins margar súlur
+    ggplot(data=stop_23st, aes(x= entries.08)) + geom_histogram(binwidth = 10, fill="#69b3a2", color="#111111") + labs(x= "Entries", y="Fjöldi skipta")
+
 
     ```
 
 -   Reiknið meðalfjölda innstiga á þessa tilteknu lestarstöð ásamt 95% öryggisbili
 
+    ```{r}
+    mean(stop_23st$entries.08) # Meðalfjöldi innstiga
+
+    t <- t.test(stop_23st$entries.08)
+
+
+    print(t[["conf.int"]]) # 95% öryggisbil
+
+    ```
+
 -   Lýsið útkomunni stuttlega
+
+*Sjáum með þessum upplýsingum að meðalfjöldi manns sem skráir sig inn kl 8 er um 350 manns. Einnig höfum við þrjá útlaga, þar sem óvenju margir hafa skráð sig inn, yfir 1300 manns. Sjáum einnig á öryggisbilinu að langflesta daga eru innstimplanir á svipuðu bili, frá 337 til 361 .*
 
 #### Liður 2: Samanburður á fjölda innstiga eftir gerð brautarpalla
 
@@ -55,9 +66,30 @@ Breytan `structure`lýsir því hvort brautarpallur tiltekinnar lestarstöðvar 
 
 -   Veljið ykkur eina dagsetningu og búið til minna gagnasafn með eingöngu mælingum frá þessari dagsetningu (en frá öllum lestarstöðvum).
 
+    ```{r}
+    jan30 <- subs %>%
+                  filter(date == '2021-01-30')
+    ```
+
 -   Teiknið graf sem ber saman fjölda innstiga á upphækkuðum brautarpöllum samanborið við neðanjarðarbrautarpalla.
 
+    ```{r}
+    ggplot(jan30, aes(x=entries.08+entries.16 ))+geom_histogram(color="black", binwidth = 30)+facet_grid( ~ Structure)
+
+
+    ```
+
 -   Reiknið meðalfjölda innstiga klukkan 08 á morgnana fyrir hvora gerð af brautarpalli.
+
+    ```{r}
+    elevated <- jan30 %>% filter(Structure == "Elevated")
+    subway <- jan30 %>% filter(Structure == "Subway")
+
+    mean(subway$entries.08)
+                     # laga
+    mean(elevated$entries.08)
+
+    ```
 
 -   Getið þið fullyrt að það sé munur á meðalfjölda innstiga eftir því af hvaða gerð brautarpallurinn er? Framkvæmið viðeigandi tilgátupróf til að kanna það og lýsið útkomunni
 
@@ -67,6 +99,19 @@ Breytan `entries.16` lýsir fjölda innstiga í tiltekna lest á tiltekinni lest
 
 -   Veljið ykkur eitthvað eitt hverfi (Neighborhood) og búið til minna gagnasafn með eingöngu mælingum frá þessu hverfi.
 
+    ```{r}
+    eastharlem <- subs %>%
+                  filter(Neighborhood == 'East Harlem')
+    ```
+
 -   Teiknið graf sem ber saman fjölda innstiga klukkan 08 á móti fjölda innstiga klukkan 16 í þessu hverfi.
 
+    ```{r}
+
+    ```
+
 -   Hvort eru fleiri innstig að morgni eða síðdegis í þessu hverfi? Framkvæmið viðeigandi tilgátupróf til að kanna það og lýsið útkomunni.
+
+```{r}
+
+```
