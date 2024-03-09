@@ -15,6 +15,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ```{r echo=T, message=F, warning=FALSE}
 library(tidyverse)
 library(ggplot2)
+
 ```
 
 ```{r}
@@ -73,8 +74,9 @@ Breytan `structure`lýsir því hvort brautarpallur tiltekinnar lestarstöðvar 
 
 -   Teiknið graf sem ber saman fjölda innstiga á upphækkuðum brautarpöllum samanborið við neðanjarðarbrautarpalla.
 
-    ```{r}
-    ggplot(jan30, aes(x=entries.08+entries.16 ))+geom_histogram(color="black", binwidth = 30)+facet_grid( ~ Structure)
+    ```{r message=FALSE, warning=FALSE}
+    ggplot(jan30, aes(x=entries.08+entries.16 )) + geom_histogram(color="purple", binwidth = 30) + facet_grid( Structure ~ .) + labs(x="Innslættir bæði kl 8 og 16", y="Fjöldi", title = "Dreifing innslátta 30 janúar") 
+
 
 
     ```
@@ -85,13 +87,19 @@ Breytan `structure`lýsir því hvort brautarpallur tiltekinnar lestarstöðvar 
     elevated <- jan30 %>% filter(Structure == "Elevated")
     subway <- jan30 %>% filter(Structure == "Subway")
 
-    mean(subway$entries.08)
-                     # laga
-    mean(elevated$entries.08)
+    mean(subway$entries.08, na.rm= TRUE)
+                    
+    mean(elevated$entries.08, na.rm = TRUE)
 
     ```
 
 -   Getið þið fullyrt að það sé munur á meðalfjölda innstiga eftir því af hvaða gerð brautarpallurinn er? Framkvæmið viðeigandi tilgátupróf til að kanna það og lýsið útkomunni
+
+    ```{r}
+    t.test(jan30$entries.08~ jan30$Structure)
+    ```
+
+*Sjáum að p-gildið er mjög hátt, þá getum við ályktað að enginn matktækur munur sé á ofanjarðar eða neðanjarðarpöllum. Þetta er svo staðfest með því að skoða öryggisbilið, sem inniheldur 0, sem þýðir að við getum ekki hafnað núlltilgátunni um að meðaltal innstiga sé jafnt.*
 
 #### Liður 3: Samanburður á fjölda innstiga að morgni eða síðdegis
 
@@ -106,12 +114,27 @@ Breytan `entries.16` lýsir fjölda innstiga í tiltekna lest á tiltekinni lest
 
 -   Teiknið graf sem ber saman fjölda innstiga klukkan 08 á móti fjölda innstiga klukkan 16 í þessu hverfi.
 
-    ```{r}
+    ```{r message=FALSE, warning=FALSE}
+
+    hist1 <- ggplot(eastharlem, aes(x=entries.08 )) + geom_histogram(binwidth = 15, fill="blue") +theme_minimal() + labs(x= "Innstök kl 8")
+      
+      
+    hist2 <- ggplot(eastharlem, aes(x=entries.16)) + geom_histogram(binwidth = 15, fill="red") + theme_minimal() + labs(x= "Innstök kl 16")
+
+    library(gridExtra)
+
+    grid.arrange(hist1, hist2, nrow=2)
+
 
     ```
 
 -   Hvort eru fleiri innstig að morgni eða síðdegis í þessu hverfi? Framkvæmið viðeigandi tilgátupróf til að kanna það og lýsið útkomunni.
 
 ```{r}
+wilcox.test(eastharlem$entries.08,eastharlem$entries.16)
 
+sum(eastharlem$entries.08) # Innstig kl 8
+sum(eastharlem$entries.16) # Innstig kl 16
 ```
+
+*Sjáum að p-gildið er mjög lágt, sem bendir til þess að það sé lítil fylgni á milli meðaltala kl8 og kl 16. Það þýðir að það er munur á fjölda innstiga á morgnana og síðdeigis. Sjáum svo að mun fleiri taka lestina síðdeigis heldur en á morgnana í East Harlem.*
