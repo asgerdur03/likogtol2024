@@ -1,0 +1,46 @@
+---
+title: "hópverkefni 5"
+author: "ÁJG"
+date: "`r Sys.Date()`"
+output:  
+  prettydoc::html_pretty:
+    theme: cayman
+    highlight: github
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(readr) # Lesum inn .csv skjal með upplýsingum um lestarferðir
+movies <- read_csv("Rotten_Tomatoes_Movies.csv")
+```
+
+#### Liður 1: Aldurstakmarkanir kvikmynda
+
+Breytan `rating` lýsir hvaða aldurshópum þykir við hæfi að sýna myndina skv. [the Classification and Rating Administration (CARA)Links to an external site.](https://atlascinemas.net/ratings.html "Tengill"). 
+
+-   Skoðið hvaða gildi breytan tekur, sýnist ykkur vera einhverjar innsláttarvillur í gögnunum? Lagið þær ef svo er, annað hvort með því að leiðrétta innsláttarvillurnar eða með því að fjarlægja þær línur úr gagnasafninu.
+
+-   Gefið flokkum breytunnar lýsandi heiti, annað hvort á íslensku eða ensku.
+
+-   Teiknið graf sem ber einkunnagjöf kvikmyndanna skv. `tomatometer_rating`saman við aldurstakmörkun þeirra (nýju breytuna sem þið voruð að búa til).
+
+-   Næst viljið þið kanna hvort það sé munur á meðaleinkunnagjöf kvikmyndanna eftir því hvaða aldurstakmörkun þær hafa. Hvers konar tilgátupróf framkvæmið þið til að kanna það?
+
+-   Skrifið nákvæmlega niður hver núlltilgátan ykkar er.
+
+-   Framkvæmið tilgátuprófið í R og túlkið niðurstöðuna. Gætið ykkar að orða mjög nákvæmlega hvaða ályktun má draga af tilgátuprófinu.
+
+-   Framkvæmið eftirápróf með skipuninni `Tukey_HSD`og túlkið niðurstöðuna. Gætið ykkar að orða mjög nákvæmlega hvaða ályktun má draga af tilgátuprófunum, þ.e.a.s. takið skýrt fram milli hverja tveggja og tveggja aldurstakmarkanahópa er munur á meðaleinkunnagjöf kvikmyndanna og á milli hverja tveggja og tveggja aldurstakmarkanahópa við getum ekkert ályktað um.
+
+#### Liður 2: Endurtakið með breytum að eigin vali
+
+-   Endurtakið lið 1 nema með breytum að eigin vali.
+
+-   Það er í góðu að annað hvort talnabreytan eða flokkabreytan sé sú sama og í lið 1, en ekki báðar breyturnar :)
+
+-   Ykkur er frjálst að kóða breyturnar á þá vegu sem ykkur þykir áhugavert og búa þannig til nýja breytur sem þið viljið bera saman. 
+
+-   Ykkur er frjálst að vinna aðeins með hluta gagnasafnins sem inniheldur þann undirhóp kvikmynda sem ykkur finnst áhugaverður.
