@@ -10,9 +10,9 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-<meta name="author" content="ÁJG" />
+<meta name="author" content="ÁJG og VE" />
 
-<meta name="date" content="2024-03-12" />
+<meta name="date" content="2024-03-15" />
 
 <title>hópverkefni 5</title>
 
@@ -149,38 +149,302 @@ code span.ot { color: #007020; }
 
 <section class="page-header">
 <h1 class="title toc-ignore project-name">hópverkefni 5</h1>
-<h4 class="author project-author">ÁJG</h4>
-<h4 class="date project-date">2024-03-12</h4>
+<h4 class="author project-author">ÁJG og VE</h4>
+<h4 class="date project-date">2024-03-15</h4>
 </section>
 
 
 
 <section class="main-content">
-<div id="r-markdown" class="section level2">
-<h2>R Markdown</h2>
-<p>This is an R Markdown document. Markdown is a simple formatting
-syntax for authoring HTML, PDF, and MS Word documents. For more details
-on using R Markdown see <a href="http://rmarkdown.rstudio.com" class="uri">http://rmarkdown.rstudio.com</a>.</p>
-<p>When you click the <strong>Knit</strong> button a document will be
-generated that includes both content as well as the output of any
-embedded R code chunks within the document. You can embed an R code
-chunk like this:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">summary</span>(cars)</span></code></pre></div>
-<pre><code>##      speed           dist       
-##  Min.   : 4.0   Min.   :  2.00  
-##  1st Qu.:12.0   1st Qu.: 26.00  
-##  Median :15.0   Median : 36.00  
-##  Mean   :15.4   Mean   : 42.98  
-##  3rd Qu.:19.0   3rd Qu.: 56.00  
-##  Max.   :25.0   Max.   :120.00</code></pre>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="co"># Lesum inn .csv skjal með upplýsingum um ratings</span></span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a>movies <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">&quot;Rotten_Tomatoes_Movies.csv&quot;</span>, <span class="at">show_col_types =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
+<div id="liður-1-aldurstakmarkanir-kvikmynda" class="section level4">
+<h4>Liður 1: Aldurstakmarkanir kvikmynda</h4>
+<p>Breytan <code>rating</code> lýsir hvaða aldurshópum þykir við hæfi að
+sýna myndina skv. <a href="https://atlascinemas.net/ratings.html" title="Tengill">the Classification and Rating Administration
+(CARA)</a></p>
+<ul>
+<li><p>Skoðið hvaða gildi breytan tekur, sýnist ykkur vera einhverjar
+innsláttarvillur í gögnunum? Lagið þær ef svo er, annað hvort með því að
+leiðrétta innsláttarvillurnar eða með því að fjarlægja þær línur úr
+gagnasafninu.</p></li>
+<li><p>Gefið flokkum breytunnar lýsandi heiti, annað hvort á íslensku
+eða ensku.</p></li>
+</ul>
+<p>Í töflunni sjáum við að það eru tveir auka flokkar, PG-13) og R) við
+getum sameinað þessi tvö verkefni. Notum mutate skipanir til að
+endurnefna flokkana okkar og sleppum þeim sem voru með innsláttavillur,
+þá þegar að við gerum töflu sjáum við að nýju nöfnin eru komin inn og
+innsláttavillurnar eru ekki með.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="fu">table</span>(movies<span class="sc">$</span>rating)</span></code></pre></div>
+<pre><code>## 
+##      G   NC17     NR     PG  PG-13 PG-13)      R     R) 
+##    652     37   4862   2062   2885      3   6136      1</code></pre>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a>movies <span class="ot">&lt;-</span> movies <span class="sc">%&gt;%</span></span>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">rating =</span> <span class="fu">case_when</span>(</span>
+<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a>    rating <span class="sc">==</span> <span class="st">&quot;PG&quot;</span> <span class="sc">~</span> <span class="st">&quot;Foreldra leiðsögn&quot;</span>,</span>
+<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a>    rating <span class="sc">==</span> <span class="st">&quot;G&quot;</span> <span class="sc">~</span> <span class="st">&quot;Almennt&quot;</span>,</span>
+<span id="cb4-5"><a href="#cb4-5" tabindex="-1"></a>    rating <span class="sc">==</span> <span class="st">&quot;R&quot;</span> <span class="sc">~</span> <span class="st">&quot;Takmarkað&quot;</span>,</span>
+<span id="cb4-6"><a href="#cb4-6" tabindex="-1"></a>    rating <span class="sc">==</span> <span class="st">&quot;NC17&quot;</span> <span class="sc">~</span> <span class="st">&quot;Bannað innan 17 ára&quot;</span>,</span>
+<span id="cb4-7"><a href="#cb4-7" tabindex="-1"></a>    rating <span class="sc">==</span> <span class="st">&quot;NR&quot;</span> <span class="sc">~</span> <span class="st">&quot;Hefur ekki fengið einkunn&quot;</span>,</span>
+<span id="cb4-8"><a href="#cb4-8" tabindex="-1"></a>    rating <span class="sc">==</span> <span class="st">&quot;PG-13&quot;</span> <span class="sc">~</span> <span class="st">&quot;Bannað innan 13&quot;</span></span>
+<span id="cb4-9"><a href="#cb4-9" tabindex="-1"></a>  ))</span>
+<span id="cb4-10"><a href="#cb4-10" tabindex="-1"></a><span class="fu">table</span>(movies<span class="sc">$</span>rating)</span></code></pre></div>
+<pre><code>## 
+##                   Almennt           Bannað innan 13       Bannað innan 17 ára 
+##                       652                      2885                        37 
+##         Foreldra leiðsögn Hefur ekki fengið einkunn                 Takmarkað 
+##                      2062                      4862                      6136</code></pre>
+<ul>
+<li>Teiknið graf sem ber einkunnagjöf kvikmyndanna skv.
+<code>tomatometer_rating</code>saman við aldurstakmörkun þeirra (nýju
+breytuna sem þið voruð að búa til).</li>
+</ul>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a>colors1 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&#39;red&#39;</span>,<span class="st">&#39;orange&#39;</span>,<span class="st">&#39;yellow&#39;</span>, <span class="st">&#39;green&#39;</span>, <span class="st">&#39;lightblue&#39;</span>, <span class="st">&#39;blue&#39;</span>, <span class="st">&#39;purple&#39;</span>)</span>
+<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a></span>
+<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> movies, <span class="fu">aes</span>(<span class="at">x =</span> rating, <span class="at">y =</span> tomatometer_rating, <span class="at">fill=</span> rating)) <span class="sc">+</span></span>
+<span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>() <span class="sc">+</span> <span class="fu">scale_fill_manual</span>(<span class="at">values=</span> colors1)<span class="sc">+</span></span>
+<span id="cb6-5"><a href="#cb6-5" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&quot;Aldurstakmörkun&quot;</span>,</span>
+<span id="cb6-6"><a href="#cb6-6" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">&quot;Tomatometer Einkunn&quot;</span>,</span>
+<span id="cb6-7"><a href="#cb6-7" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">&quot;Einkunnagjöf kvikmyndanna miðað við aldurstakmörkun&quot;</span>)<span class="sc">+</span><span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">60</span>, <span class="at">vjust =</span> <span class="fl">0.5</span>, <span class="at">hjust=</span><span class="fl">0.5</span>))</span></code></pre></div>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
+<ul>
+<li>Næst viljið þið kanna hvort það sé munur á meðaleinkunnagjöf
+kvikmyndanna eftir því hvaða aldurstakmörkun þær hafa. Hvers konar
+tilgátupróf framkvæmið þið til að kanna það?</li>
+</ul>
+<p>Gott er að nota ANOVA til að bera saman meðaleinkunn fyrir 3+
+aldurstakmörkunarhópa. ANOVA athugar hvort að það sé munur á milli
+hópanna.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a>anova_nidurs <span class="ot">&lt;-</span> <span class="fu">aov</span>(tomatometer_rating <span class="sc">~</span> movies<span class="sc">$</span>rating, <span class="at">data =</span> movies)</span>
+<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a><span class="fu">summary</span>(anova_nidurs)</span></code></pre></div>
+<pre><code>##                  Df   Sum Sq Mean Sq F value Pr(&gt;F)    
+## movies$rating     5  1297564  259513   350.9 &lt;2e-16 ***
+## Residuals     16628 12295976     739                   
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 4 observations deleted due to missingness</code></pre>
+<p>Hér sjáum við að p gildin okkar eru mjög lítil Pr(&gt;F), minni en
+0.0001 sem segir okkur að það er mismunur á meðaleinkunnagjöf í
+mismunandi aldurshópum. Því minna sem p gildið er því meiri líkur er á
+að það sé til staðar munur á milli hópa.</p>
+<ul>
+<li>Skrifið nákvæmlega niður hver núlltilgátan ykkar er.</li>
+</ul>
+<p>Núlltilgátan í þessu dæmi er að meðaleinkunnagjöf er eins hjá öllum
+aldurs/rating hópum. Ef p gildið (Pr(&gt;F)) er minna en 0.05 og því
+getum við hafnað núlltilgátunni og dregið þá ályktun að það sé munur á
+milli hópa varðandi meðaleinkunn kvikmynda.</p>
+<ul>
+<li>Framkvæmið tilgátuprófið í R og túlkið niðurstöðuna. Gætið ykkar að
+orða mjög nákvæmlega hvaða ályktun má draga af tilgátuprófinu.</li>
+</ul>
+<p>Við getum notað ANOVA aftur</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a>anova_nidurs <span class="ot">&lt;-</span> <span class="fu">aov</span>(tomatometer_rating <span class="sc">~</span> movies<span class="sc">$</span>rating, <span class="at">data =</span> movies)</span>
+<span id="cb9-2"><a href="#cb9-2" tabindex="-1"></a><span class="fu">summary</span>(anova_nidurs)</span></code></pre></div>
+<pre><code>##                  Df   Sum Sq Mean Sq F value Pr(&gt;F)    
+## movies$rating     5  1297564  259513   350.9 &lt;2e-16 ***
+## Residuals     16628 12295976     739                   
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 4 observations deleted due to missingness</code></pre>
+<p>Í töflunni sjáum við DF-degrees of freedom fyrir meðaleinkunnagjöf
+eftir rating og rest sum sq er summa fjölda fyrir meðaleinkunnagjöf
+eftir rating mean sq er notað til að reikna f value Pr(&gt;F) p gildið
+okkar sýnir líkurnar á að sjá hvort að það sé munur á milli hópa. F
+value er fundið með því að deila sum sq með mean sq til að finna
+hlutfall á mismuni milli hópa og innan hópa.</p>
+<p>Ályktunin byggist á p gildinu okkar, ef p gildið er minna en 0.05 þá
+getum við hafnað núlltilgátunni og dregið þá ályktun að það sé munur á
+milli hópanna og þetta gefur til kynna að kvikmyndir fá mismunandi
+einkunnir eftir aldurshóp.</p>
+<ul>
+<li>Framkvæmið eftirápróf með skipuninni <code>Tukey_HSD</code>og túlkið
+niðurstöðuna. Gætið ykkar að orða mjög nákvæmlega hvaða ályktun má draga
+af tilgátuprófunum, þ.e.a.s. takið skýrt fram milli hverja tveggja og
+tveggja aldurstakmarkanahópa er munur á meðaleinkunnagjöf kvikmyndanna
+og á milli hverja tveggja og tveggja aldurstakmarkanahópa við getum
+ekkert ályktað um.</li>
+</ul>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a>tukey_nidurs <span class="ot">&lt;-</span> <span class="fu">TukeyHSD</span>(anova_nidurs)</span>
+<span id="cb11-2"><a href="#cb11-2" tabindex="-1"></a><span class="fu">print</span>(tukey_nidurs)</span></code></pre></div>
+<pre><code>##   Tukey multiple comparisons of means
+##     95% family-wise confidence level
+## 
+## Fit: aov(formula = tomatometer_rating ~ movies$rating, data = movies)
+## 
+## $`movies$rating`
+##                                                     diff         lwr
+## Bannað innan 13-Almennt                       -20.088929 -23.4496547
+## Bannað innan 17 ára-Almennt                    -1.165354 -14.2631193
+## Foreldra leiðsögn-Almennt                     -10.342432 -13.8245948
+## Hefur ekki fengið einkunn-Almennt               3.052602  -0.1797179
+## Takmarkað-Almennt                             -14.390595 -17.5829909
+## Bannað innan 17 ára-Bannað innan 13            18.923575   6.1009012
+## Foreldra leiðsögn-Bannað innan 13               9.746497   7.5115562
+## Hefur ekki fengið einkunn-Bannað innan 13      23.141531  21.3201590
+## Takmarkað-Bannað innan 13                       5.698333   3.9487930
+## Foreldra leiðsögn-Bannað innan 17 ára          -9.177078 -22.0321136
+## Hefur ekki fengið einkunn-Bannað innan 17 ára   4.217956  -8.5716637
+## Takmarkað-Bannað innan 17 ára                 -13.225241 -26.0048294
+## Hefur ekki fengið einkunn-Foreldra leiðsögn    13.395034  11.3582784
+## Takmarkað-Foreldra leiðsögn                    -4.048163  -6.0209457
+## Takmarkað-Hefur ekki fengið einkunn           -17.443198 -18.9312524
+##                                                       upr     p adj
+## Bannað innan 13-Almennt                       -16.7282031 0.0000000
+## Bannað innan 17 ára-Almennt                    11.9324113 0.9998583
+## Foreldra leiðsögn-Almennt                      -6.8602695 0.0000000
+## Hefur ekki fengið einkunn-Almennt               6.2849222 0.0769223
+## Takmarkað-Almennt                             -11.1981998 0.0000000
+## Bannað innan 17 ára-Bannað innan 13            31.7462485 0.0003755
+## Foreldra leiðsögn-Bannað innan 13              11.9814373 0.0000000
+## Hefur ekki fengið einkunn-Bannað innan 13      24.9629030 0.0000000
+## Takmarkað-Bannað innan 13                       7.4478740 0.0000000
+## Foreldra leiðsögn-Bannað innan 17 ára           3.6779574 0.3225908
+## Hefur ekki fengið einkunn-Bannað innan 17 ára  17.0075759 0.9361601
+## Takmarkað-Bannað innan 17 ára                  -0.4456533 0.0375559
+## Hefur ekki fengið einkunn-Foreldra leiðsögn    15.4317901 0.0000000
+## Takmarkað-Foreldra leiðsögn                    -2.0753807 0.0000001
+## Takmarkað-Hefur ekki fengið einkunn           -15.9551426 0.0000000</code></pre>
+<p>Marktækur munur á milli hópa:</p>
+<p>Bannað innan 13 - Almennt: Meðalmeðalgildi meðaleinkunna milli
+þessara hópa eru marktækt mismunandi. (p = 0.000)</p>
+<p>Bannað innan 17 ára - Bannað innan 13: Meðalmeðalgildi meðaleinkunna
+milli þessara hópa eru marktækt mismunandi. (p = 0.000)</p>
+<p>Foreldra leiðsögn - Bannað innan 13: Meðalmeðalgildi meðaleinkunna
+milli þessara hópa eru marktækt mismunandi. (p = 0.000)</p>
+<p>Hefur ekki fengið einkunn - Bannað innan 13: Meðalmeðalgildi
+meðaleinkunna milli þessara hópa eru marktækt mismunandi. (p =
+0.000)</p>
+<p>og fleiri</p>
+<p>Enginn marktækur munur á milli hópa:</p>
+<p>Bannað innan 17 ára - Almennt: Meðalmeðalgildi meðaleinkunna milli
+þessara hópa eru ekki marktæk mismunandi (því p er &gt; 0.05). (p =
+0.999)</p>
+<p>Foreldra leiðsögn - Bannað innan 17 ára: Meðalmeðalgildi
+meðaleinkunna milli þessara hópa eru ekki marktæk mismunandi. (p =
+0.323)</p>
+<p>Hefur ekki fengið einkunn - Bannað innan 17 ára: Meðalmeðalgildi
+meðaleinkunna milli þessara hópa eru ekki marktæk mismunandi. (p =
+0.936)</p>
 </div>
-<div id="including-plots" class="section level2">
-<h2>Including Plots</h2>
-<p>You can also embed plots, for example:</p>
-<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAqAAAAHgCAMAAABNUi8GAAAAXVBMVEUAAAAAADoAAGYAOjoAOpAAZrY6AAA6ADo6AGY6Ojo6kNtmAABmADpmkJBmtrZmtv+QOgCQkGaQtpCQ2/+2ZgC225C2///bkDrb/7bb////tmb/25D//7b//9v///93nJJvAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAN6UlEQVR4nO3djXbqurlGYSUNpIXVHVpo3DjA/V/m9j8miR1bn2Re0HzGOGvk7IDsFWaNrbAsdwaEuVvvADCGQCGNQCGNQCGNQCGNQCGNQCGNQCGNQCGNQCGNQCGNQCGNQCGNQCGNQCGNQCGNQCGNQCGNQCGNQCGNQCGNQCGNQCGNQCGNQCGNQCGNQCGNQCGNQCGNQCGNQCGNQCGNQCGNQCGNQCGNQCGNQCGNQCGNQCGNQCGNQCGNQCGNQCGNQCGNQCGNQCGNQCGNQCGNQCGNQCGNQCGNQCGNQCGNQCGNQCGNQCGNQCGNQCGNQCGNQCGNQCGNQCGNQCGNQCGNQCGNQCGNQCGNQCGNQCGNQCGNQCGNQCGNQCGNQCGNQCGNQCGNQCEtcKAOmORWgYYdDo8qUqCnXZ3/83uQ4ZCsOIFmblN/kbdfmIZDuqIEetp1WWYvH+bhkLAogR63b+2X+cCbPIFiEo6gkBbrHLQ5hHIOCptIV/HHbX0VP3D8JFB89+OkJ/OgEOHOP2VBoNDgen9++8+Tnz8VE/WYadFAmajHXEsGyjQT5lvwHHR4on7+h1SQjOWu4jmCIhQm6iGNiXpIYx4U0ggU0iIFenBuVU3Wvw08gEAxSaSLpOLc8+BW5bkoF0mwiDfNlD/tz0wzwSjeRH09Rc8n6mHCERTSIp+D9n6nZBgO6eIqHtKYB4U0AoU0AoU0AoU0AoU0AoU0AoU0AoU0AoU0AoU0AoU0AoU0AoU0AoU0AoU0AoU0AoU0AoU0AoU0AoU0AoU0AoU0AoU0AoU0AoU0AoU0AoU0AoU0AoU0AoU0AoU0AoU0AoU0AoU0AoU0AoU0AoU0AoU0AoU0AoU0AoU0AoU0AoU0AoW0SIFWC8kWBlaLJ1BMFCfQzDWrcOeO5bhhESXQ3irx5crx1uGQsCiBHrfdMvH5wJs8gWISjqCQFusctDmEcg4Km0hX8cdtfRU/cPwkUEzEPCikESikMVEPaUzUQxrTTJC28ES968wYDgnjCAppTNRDGhP1kMY8KKQRKKRFCvRQXLx/rp172gcZDsmKE2jV5+v+asLJMBzSFWketLh2P6zKL5lmgkm0ifpmLpRP1MMk0lt8cfTMOILCLk6gx+3ze3UIzYeukggUk8SaZsrrifpVoOHwGOZ/CIN5UCzHnWe/8gSKxbjen/OeE/KBNxkO94BAIY1AoY1zUGjjKh4PhkAhjUAhjUAhjUAhjUAhjUAhjUAhjUAhjUAhjUAhjUAhjUAhjUAhjUAhjUAhjUAhjUAhjUAhjUAhzSfQ49a9fBwGVkcIvV2kzSPQ/GmfvXxU9wBdYLtI2/xAy7vWlTdVzAbX4Qy6XaRtfqDl3WnLQIduTRt4u0ib/xH0MLgGUtDtIm3e56DdYnKRt4u0eV7FjywwE3i7SBvzoJDmdw664HaRNr+r+AW3i7T5XCSZ5pfmbhdp8zmC1gt4OOZBER8XSZBGoJDGWzykeR9BjZdKBIpJ/N/iD4PLHAbdLtLmHyifZsIC/APl86BYgHegx+3YW/xp98uFFIFiEv+r+LGPg2au+X197gZ+cU+gmCTKPGjv8yTZQMcEikmiBNr7PMnQpRSBYhKPQMt/z5mNvsVzBEUoHoEeXj4+16vRedDu34NwDgobv8+D5kWAo/Ogv15JESgm8Qv0UMTJPCgW4PMWvzpuyzuL8KtOxOd1keSe9qfdaJ9M1COMOJ8HZaIegTBRD2lR5kGHJ+pdZ95uIlVR5kE5giKUOPOgTNQjkEjzoEzUIwzmQSEt0jxouO3i3oS9Ao767+I/14O3cSLQR+XOQV/dSJ8HvUwn8XnQtLjen+HGm/fA35ehaS7eOYKmRyDQKcvQlJdRBJqi2wc6cRmaw9OeQFN083PQqcvQZG5DoCm69VX85GVoPtf/IFAYeZ+DTliG5rQbfgyBYhLPq3iWocEyuIEtpPmdgy64XaTN7yp+we0ibT4XSSxDg8Vwj3pI4yIJ0ggU0rznQX/7PVKo7SJtfr9JKv7MbDP1BIpJfOZB62mmX38XH2a7SJvHVfyf+tDJMjRYgP8RdOiWDIG3i7T5nINWn1Ga8GmmINtF2gwT9aa5egLFJMyDQhqBQhqBQhqBQhqBQhqBQhqBQhqBQhqBQhqBQhqBQhqBQhqBQhqBQhqBQhqBQhqBQhqBQhqBQhqBQhqBQhqBYr6wK82Mbyr4A28yHJYUeK2uX7cV9oE3GQ4Lcr0/F9pYyAfeZDgsiEAhjUChjXNQaOMqHqhFCvS0++X2dwSKSeIEmrlmucTcDaybSKCYJEqgveU8h+7DTKCYJEqgveU8h+5kT6CYhCMopMU6B20OoZyDwibSVXx7I/vBlUAIFJMwDwppBAppTNRDGhP1kMY0E6QtPFF/WaRuxnBIGEdQSGOiHtKYqIc05kEhjUAhLVKgWfH2Xp2GZnzcDhaRLpKe9sVp6OpMoDCKOM102hWXSAQKk6gT9YeXDwKFSdyJ+sOKQGES6Ry0yfK4Hfo8E4FikmhX8fWb/GlHoHdK5PMSzIPiR0vef2kMgeIni97BbgyB4icEGnY4BEagYYdDaJyDQhtX8cDvCBTSCBTSCBTSCBTSCBTSCBTSCBTSCBTSCBTSCBTSCBTSCBTSCBTSCDRhIp+oG0Wg6VL5TPIoAk2WzL/qGEWgySLQBYfDfAS64HDwwDnocsPBB1fxiw2HR0WgkEagkEagkEagkEagkEagD+4eppLGEOhju4vJ+DEE+tDu49eZYwj0oRFo9O3CgkCjbxcmnIPG3i5suIqPvF2kjUAhjUAfwL2/jY8h0Pt39xdCYwj07t3/VNIYAr17BDrvgTcZLmUEOu+BNxnu4Y1dB3EOOuuBNxnu0Y03yFX8nAfeZLgH99jv4qMIVMfwgZBAAz7wJsM9gpG3cQIN+MCbDHcvRs4WRyN86OugUZECPe1c5fl9xnCjV6pj1wG+T4wy6G8R+r2NP/J10Kg4gWZuU3+Rt19MGO63V8/7ZV90UO936oTfxsdECfS067LMXj4mDjf2Anm/sosP6v/EhN/Gx0QJ9Lh9a7/Mr9/kXWdgAwkHmu7b+BiOoGEH5VonsFjnoM0hlHPQL9/kIDlTpKv447Z+Ix84fqZ6FY/ZIgW69HB4VAQKaQQKaQQKaQQKaQQKaQQKaQQKaTcLFJjkRoHG3AbDJDZM8LEib4NhEhsm+FiRt8EwiQ0TfKzI22CYxIYJPlbkbTBMYsMEHyvyNhgmsWGCjxV5GwyT2DDBx4q8DYZJbJjgY0XeBsMkNkzwsYDgCBTSCBTSCBTSCBTSCBTSCBTSCBTSCBTSCBTSCBTSCBTSCBTSogeaO/e0N41Q35R0ZRvr85/vV3vjOVQ9jG2PqqVSNua96YYx/nyybzthGibIq9UTO9C82Mfctp+fr3vzWMdtdVP9bgTPoZphTHt02hVPyMqX0LQ3l2FsP5+s+Btd74RtmBCvVl/kQOvb2h9WljHaBRsMY+X10k7dCJ5DNcPY9uhzXd5HvXhBbXvTDWPbm+N2Uz5zZfzZdMOEeLWuRA708mP0l62sY+VuU/3cuhH8hmqHCbBH5bHFuDftMAH2piwrwN5UgQb42VyJHWh1wM9Nu3n4V32yZRqrDrQdwXuo+ikB9ujQ2wnbMAH2JisyD7A35TBhXq2eyIHWJyGmU5Hjtlyy4bCxjVX9pLoRvIeqhgmwR+UyKfa9qYYx701eBWXem3qYMK9Wj36gzUDP7zKB2vcob6+RjHvjulM808/ntHv5CPA/l3KYAHtz7Q7e4uuB1m86b/HWPaqXmTLvTX+1KtvPpzwjDnDC0eVofbV67uAiqR7odW8aK8RF0vk6UO89atbkte5N1l9NzfbzKYMKcMlWP9W8N1f0p5nqv2nem5bxkYeYZrrq3HuP2vX6jHvTDmPbm+/Ptg0T5tXquYOJ+uovedjYxsqDTNS3V/GWPfpctwc+095chrH9fA7FeWMVk+1n0w0T5NXqif6rzsz+C6+Dc/XRwjBW897cjeA5VDOMZY+y+g7D5dMse9Mbxvbz+f5s2zAhXq0ePiwCaQQKaQQKaQQKaQQKaQQKaQQKaQQKaQQKaQQKaQQKaQQKaQQKaQQKaQQKaQQKaQQKaQQKaQQKaQQKaQQKaQQKaQQKaQQKaQQKaQQKaQQKaQTqLX9b/pnpIVBfx61vZv7PTBCB+iLQRRCop8+1cy8f1V0QyzUt1n9tiy/K//h2/nz977pZS6759vHPf8oVluo7E1bP/H8ZaVFq852sXXwOXxCor+o4WC3gst4U/1et+1amVt5luMgwd71vN2tfrOr/Uj7z2AZafad9HL4hUF91ZmVU1Z2vN81Nj6vbvZf/NXv56L5dfXH8s6/vlX0d6OZ8Gea2fyNJBOqrTKy+xXW7BEH7R3Of9nZFl+L/7c468/I9/jrQt/NlmNv9bWQRqK8q0Po+3O5LoK/tkkPtt+tAixPN5/99O4K+nS/D3PrvJIhAfV2OoOdLm18Cbb9dZdg9ZuAIip8QqK8us9KXt/hqBZbyHPTt8thmsbvuLX5zefNn3mkYgfqqEqvXT21WLr4EWq7A0l7Fl9/ujqDHbbW65qZaNvC06978m8fd+u8kiEC9Hdp50OLI+CXQf68vS7GU3+7OQZ/2ZYblM4tU3V/b9vKpeRy+IdDwuBwPiEDDI9CACDQ8Ag2IQCGNQCGNQCGNQCGNQCGNQCGNQCGNQCGNQCGNQCGNQCGNQCGNQCGNQCGNQCGNQCGNQCGNQCGNQCGNQCGNQCHtb/5QAr6+cJD7AAAAAElFTkSuQmCC" /><!-- --></p>
-<p>Note that the <code>echo = FALSE</code> parameter was added to the
-code chunk to prevent printing of the R code that generated the
-plot.</p>
+<div id="liður-2-endurtakið-með-breytum-að-eigin-vali" class="section level4">
+<h4>Liður 2: Endurtakið með breytum að eigin vali</h4>
+<ul>
+<li><p>Endurtakið lið 1 nema með breytum að eigin vali.</p></li>
+<li><p>Það er í góðu að annað hvort talnabreytan eða flokkabreytan sé sú
+sama og í lið 1, en ekki báðar breyturnar :)</p></li>
+<li><p>Ykkur er frjálst að kóða breyturnar á þá vegu sem ykkur þykir
+áhugavert og búa þannig til nýja breytur sem þið viljið bera
+saman. </p></li>
+<li><p>Ykkur er frjálst að vinna aðeins með hluta gagnasafnins sem
+inniheldur þann undirhóp kvikmynda sem ykkur finnst
+áhugaverður.</p></li>
+</ul>
+<hr />
+<ul>
+<li>Skoðið hvaða gildi breytan tekur, sýnist ykkur vera einhverjar
+innsláttarvillur í gögnunum? Lagið þær ef svo er, annað hvort með því að
+leiðrétta innsláttarvillurnar eða með því að fjarlægja þær línur úr
+gagnasafninu. <code>tomatometer_status</code></li>
+</ul>
+<!-- -->
+<ul>
+<li><p>Gefið flokkum breytunnar lýsandi heiti, annað hvort á íslensku
+eða ensku.</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" tabindex="-1"></a><span class="fu">table</span>(movies<span class="sc">$</span>tomatometer_status)</span></code></pre></div>
+<pre><code>## 
+## Certified Fresh           Fresh          Rotten 
+##            2957            6448            7233</code></pre>
+<p>Sjáum hér að breytan hefur 3 flokka, en við ætlum að breyta þeim.</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" tabindex="-1"></a>movies <span class="ot">&lt;-</span> movies <span class="sc">%&gt;%</span></span>
+<span id="cb15-2"><a href="#cb15-2" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">tomatometer_status =</span> <span class="fu">case_when</span>(</span>
+<span id="cb15-3"><a href="#cb15-3" tabindex="-1"></a>    tomatometer_status <span class="sc">==</span> <span class="st">&quot;Rotten&quot;</span> <span class="sc">~</span> <span class="st">&quot;Slæm mynd &quot;</span>,</span>
+<span id="cb15-4"><a href="#cb15-4" tabindex="-1"></a>    tomatometer_status <span class="sc">==</span> <span class="st">&quot;Fresh&quot;</span> <span class="sc">~</span> <span class="st">&quot;Góð mynd &quot;</span>,</span>
+<span id="cb15-5"><a href="#cb15-5" tabindex="-1"></a>    tomatometer_status <span class="sc">==</span> <span class="st">&quot;Certified Fresh&quot;</span> <span class="sc">~</span> <span class="st">&quot;Mjög góð mynd &quot;</span>))</span>
+<span id="cb15-6"><a href="#cb15-6" tabindex="-1"></a></span>
+<span id="cb15-7"><a href="#cb15-7" tabindex="-1"></a><span class="fu">table</span>(movies<span class="sc">$</span>tomatometer_status)</span></code></pre></div>
+<pre><code>## 
+##      Góð mynd  Mjög góð mynd      Slæm mynd  
+##           6448           2957           7233</code></pre></li>
+<li><p>Teiknið graf sem ber einkunnagjöf kvikmyndanna skv.
+<code>audience_rating</code>saman við
+<strong>tomatometer_status</strong> þeirra</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" tabindex="-1"></a><span class="fu">ggplot</span>(movies, <span class="fu">aes</span>(<span class="at">x=</span>tomatometer_status, <span class="at">y=</span> audience_rating, <span class="at">fill=</span> tomatometer_status))<span class="sc">+</span><span class="fu">geom_boxplot</span>() <span class="sc">+</span> </span>
+<span id="cb17-2"><a href="#cb17-2" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&quot;Tomatometer Staða&quot;</span>,</span>
+<span id="cb17-3"><a href="#cb17-3" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">&quot;Audience Einkunn&quot;</span>,</span>
+<span id="cb17-4"><a href="#cb17-4" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">&quot;Einkunnagjöf áhorfanda miðað við tomatometer status&quot;</span>) <span class="sc">+</span> <span class="fu">scale_fill_manual</span>(<span class="at">values=</span> <span class="fu">c</span>(<span class="st">&#39;yellow&#39;</span>, <span class="st">&#39;green&#39;</span>, <span class="st">&#39;red&#39;</span>))</span></code></pre></div>
+<p><img src="data:image/png;base64,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" /><!-- --></p></li>
+<li><p>Næst viljið þið kanna hvort það sé munur á meðaleinkunnagjöf
+kvikmyndanna eftir því hvaða <strong>tomatometer_status</strong> þær
+hafa. Hvers konar tilgátupróf framkvæmið þið til að kanna það?</p>
+<p><em>Getum framkvæmt ANOVA próf fyrir meðaltalið og Bartlett-test
+fyrir dreifnina</em></p></li>
+<li><p>Skrifið nákvæmlega niður hver núlltilgátan ykkar er.</p>
+<p><em>Núlltilgáta okkar í Bartlett-prófinu er:</em></p>
+<p><em>H0: Dreifnin á meðaleinkunnagjöf kvikmyndanna er jöfn milli allra
+hópanna sem skilgreindir eru af tomatometer_status.</em></p></li>
+<li><p>Framkvæmið tilgátuprófið í R og túlkið niðurstöðuna. Gætið ykkar
+að orða mjög nákvæmlega hvaða ályktun má draga af tilgátuprófinu.</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" tabindex="-1"></a><span class="fu">bartlett.test</span>(audience_rating <span class="sc">~</span> tomatometer_status, <span class="at">data=</span>movies )</span></code></pre></div>
+<pre><code>## 
+##  Bartlett test of homogeneity of variances
+## 
+## data:  audience_rating by tomatometer_status
+## Bartlett&#39;s K-squared = 444.88, df = 2, p-value &lt; 2.2e-16</code></pre>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" tabindex="-1"></a>fervik <span class="ot">&lt;-</span> <span class="fu">aov</span>(audience_rating <span class="sc">~</span> tomatometer_status, <span class="at">data =</span> movies)</span>
+<span id="cb20-2"><a href="#cb20-2" tabindex="-1"></a><span class="fu">anova</span>(fervik)</span></code></pre></div>
+<pre><code>## Analysis of Variance Table
+## 
+## Response: audience_rating
+##                       Df  Sum Sq Mean Sq F value    Pr(&gt;F)    
+## tomatometer_status     2 2457538 1228769  4572.1 &lt; 2.2e-16 ***
+## Residuals          16383 4403001     269                      
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+<p><em>Niðurstöður Bartlett-prófsins gefa til kynna að tilvikin hafi
+ólík dreifni milli hópanna. P-gildið er næstum núll, &lt; 2.2e-16, sem
+bendir til þess að við höfum næstum fullkomna ástæðu til að hafna
+núlltilgátunni um að dreifnin sé sú sama milli hópanna.</em></p>
+<p><em>Ályktunin sem má draga af þessum niðurstöðum er að dreifnin á
+meðaleinkunnagjöf kvikmyndanna er ekki jöfn milli hópanna. Þetta bendir
+til þess að tomatometer_status hefur áhrif á meðaleinkunn
+kvikmyndanna.</em></p></li>
+<li><p>Framkvæmið eftirápróf með skipuninni <code>Tukey_HSD</code>og
+túlkið niðurstöðuna. Gætið ykkar að orða mjög nákvæmlega hvaða ályktun
+má draga af tilgátuprófunum, þ.e.a.s. takið skýrt fram milli hverja
+tveggja og tveggja aldurstakmarkanahópa er munur á meðaleinkunnagjöf
+kvikmyndanna og á milli hverja tveggja og tveggja aldurstakmarkanahópa
+við getum ekkert ályktað um.</p></li>
+</ul>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" tabindex="-1"></a><span class="fu">TukeyHSD</span>(fervik)</span></code></pre></div>
+<pre><code>##   Tukey multiple comparisons of means
+##     95% family-wise confidence level
+## 
+## Fit: aov(formula = audience_rating ~ tomatometer_status, data = movies)
+## 
+## $tomatometer_status
+##                                 diff        lwr        upr p adj
+## Mjög góð mynd -Góð mynd     8.899634   8.041935   9.757332     0
+## Slæm mynd -Góð mynd       -21.031611 -21.696080 -20.367142     0
+## Slæm mynd -Mjög góð mynd  -29.931245 -30.771818 -29.090672     0</code></pre>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">TukeyHSD</span>(fervik))</span></code></pre></div>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
+<p>Ályktunin sem má draga er:</p>
+<ol style="list-style-type: decimal">
+<li><p>Munurinn á meðaleinkunnagjöf kvikmynda milli hópa “Mjög góð mynd”
+og “Góð mynd” er 8.899634, með 95% öryggisstigi milli 8.041935 og
+9.757332. P-gildið (p adj) er minna en 0.05, sem þýðir að munurinn er
+taldur vera marktæktur.</p></li>
+<li><p>Munurinn á meðaleinkunnagjöf kvikmynda milli hópa “Slæm mynd” og
+“Góð mynd” er -21.031611 , með 95% öryggisstigi milli -21.696080 og
+-20.367142. P-gildið er minna en 0.05, sem þýðir að munurinn er taldur
+vera marktæktur.</p></li>
+<li><p>Munurinn á meðaleinkunnagjöf kvikmynda milli hópa “Slæm mynd” og
+“Mjög góð mynd” er -29.931245, með 95% öryggisstigi milli -30.771818 og
+-29.090672. P-gildið er minna en 0.05, sem þýðir að munurinn er taldur
+vera marktæktur.</p></li>
+</ol>
 </div>
 </section>
 

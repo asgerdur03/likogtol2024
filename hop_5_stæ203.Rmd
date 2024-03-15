@@ -1,6 +1,6 @@
 ---
 title: "hópverkefni 5"
-author: "ÁJG"
+author: "ÁJG og VE"
 date: "`r Sys.Date()`"
 output:  
   prettydoc::html_pretty:
@@ -12,28 +12,113 @@ output:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+library(readr)
+library(multcomp)
+library(ggplot2)
+library(dplyr)
+```
+
 ```{r}
-library(readr) # Lesum inn .csv skjal með upplýsingum um lestarferðir
-movies <- read_csv("Rotten_Tomatoes_Movies.csv")
+# Lesum inn .csv skjal með upplýsingum um ratings
+movies <- read_csv("Rotten_Tomatoes_Movies.csv", show_col_types = FALSE)
 ```
 
 #### Liður 1: Aldurstakmarkanir kvikmynda
 
-Breytan `rating` lýsir hvaða aldurshópum þykir við hæfi að sýna myndina skv. [the Classification and Rating Administration (CARA)Links to an external site.](https://atlascinemas.net/ratings.html "Tengill"). 
+Breytan `rating` lýsir hvaða aldurshópum þykir við hæfi að sýna myndina skv. [the Classification and Rating Administration (CARA)](https://atlascinemas.net/ratings.html "Tengill")
 
 -   Skoðið hvaða gildi breytan tekur, sýnist ykkur vera einhverjar innsláttarvillur í gögnunum? Lagið þær ef svo er, annað hvort með því að leiðrétta innsláttarvillurnar eða með því að fjarlægja þær línur úr gagnasafninu.
 
 -   Gefið flokkum breytunnar lýsandi heiti, annað hvort á íslensku eða ensku.
 
+Í töflunni sjáum við að það eru tveir auka flokkar, PG-13) og R) við getum sameinað þessi tvö verkefni. Notum mutate skipanir til að endurnefna flokkana okkar og sleppum þeim sem voru með innsláttavillur, þá þegar að við gerum töflu sjáum við að nýju nöfnin eru komin inn og innsláttavillurnar eru ekki með.
+
+```{r}
+table(movies$rating)
+
+
+```
+
+```{r}
+movies <- movies %>%
+  mutate(rating = case_when(
+    rating == "PG" ~ "Foreldra leiðsögn",
+    rating == "G" ~ "Almennt",
+    rating == "R" ~ "Takmarkað",
+    rating == "NC17" ~ "Bannað innan 17 ára",
+    rating == "NR" ~ "Hefur ekki fengið einkunn",
+    rating == "PG-13" ~ "Bannað innan 13"
+  ))
+table(movies$rating)
+```
+
 -   Teiknið graf sem ber einkunnagjöf kvikmyndanna skv. `tomatometer_rating`saman við aldurstakmörkun þeirra (nýju breytuna sem þið voruð að búa til).
+
+```{r}
+colors1 <- c('red','orange','yellow', 'green', 'lightblue', 'blue', 'purple')
+
+ggplot(data = movies, aes(x = rating, y = tomatometer_rating, fill= rating)) +
+  geom_boxplot() + scale_fill_manual(values= colors1)+
+  labs(x = "Aldurstakmörkun",
+       y = "Tomatometer Einkunn",
+       title = "Einkunnagjöf kvikmyndanna miðað við aldurstakmörkun")+theme(axis.text.x = element_text(angle = 60, vjust = 0.5, hjust=0.5))
+```
 
 -   Næst viljið þið kanna hvort það sé munur á meðaleinkunnagjöf kvikmyndanna eftir því hvaða aldurstakmörkun þær hafa. Hvers konar tilgátupróf framkvæmið þið til að kanna það?
 
+Gott er að nota ANOVA til að bera saman meðaleinkunn fyrir 3+ aldurstakmörkunarhópa. ANOVA athugar hvort að það sé munur á milli hópanna.
+
+```{r}
+anova_nidurs <- aov(tomatometer_rating ~ movies$rating, data = movies)
+summary(anova_nidurs)
+```
+
+Hér sjáum við að p gildin okkar eru mjög lítil Pr(\>F), minni en 0.0001 sem segir okkur að það er mismunur á meðaleinkunnagjöf í mismunandi aldurshópum. Því minna sem p gildið er því meiri líkur er á að það sé til staðar munur á milli hópa.
+
 -   Skrifið nákvæmlega niður hver núlltilgátan ykkar er.
+
+Núlltilgátan í þessu dæmi er að meðaleinkunnagjöf er eins hjá öllum aldurs/rating hópum. Ef p gildið (Pr(\>F)) er minna en 0.05 og því getum við hafnað núlltilgátunni og dregið þá ályktun að það sé munur á milli hópa varðandi meðaleinkunn kvikmynda.
 
 -   Framkvæmið tilgátuprófið í R og túlkið niðurstöðuna. Gætið ykkar að orða mjög nákvæmlega hvaða ályktun má draga af tilgátuprófinu.
 
+Við getum notað ANOVA aftur
+
+```{r}
+anova_nidurs <- aov(tomatometer_rating ~ movies$rating, data = movies)
+summary(anova_nidurs)
+```
+
+Í töflunni sjáum við DF-degrees of freedom fyrir meðaleinkunnagjöf eftir rating og rest sum sq er summa fjölda fyrir meðaleinkunnagjöf eftir rating mean sq er notað til að reikna f value Pr(\>F) p gildið okkar sýnir líkurnar á að sjá hvort að það sé munur á milli hópa. F value er fundið með því að deila sum sq með mean sq til að finna hlutfall á mismuni milli hópa og innan hópa.
+
+Ályktunin byggist á p gildinu okkar, ef p gildið er minna en 0.05 þá getum við hafnað núlltilgátunni og dregið þá ályktun að það sé munur á milli hópanna og þetta gefur til kynna að kvikmyndir fá mismunandi einkunnir eftir aldurshóp.
+
 -   Framkvæmið eftirápróf með skipuninni `Tukey_HSD`og túlkið niðurstöðuna. Gætið ykkar að orða mjög nákvæmlega hvaða ályktun má draga af tilgátuprófunum, þ.e.a.s. takið skýrt fram milli hverja tveggja og tveggja aldurstakmarkanahópa er munur á meðaleinkunnagjöf kvikmyndanna og á milli hverja tveggja og tveggja aldurstakmarkanahópa við getum ekkert ályktað um.
+
+```{r}
+tukey_nidurs <- TukeyHSD(anova_nidurs)
+print(tukey_nidurs)
+```
+
+Marktækur munur á milli hópa:
+
+Bannað innan 13 - Almennt: Meðalmeðalgildi meðaleinkunna milli þessara hópa eru marktækt mismunandi. (p = 0.000)
+
+Bannað innan 17 ára - Bannað innan 13: Meðalmeðalgildi meðaleinkunna milli þessara hópa eru marktækt mismunandi. (p = 0.000)
+
+Foreldra leiðsögn - Bannað innan 13: Meðalmeðalgildi meðaleinkunna milli þessara hópa eru marktækt mismunandi. (p = 0.000)
+
+Hefur ekki fengið einkunn - Bannað innan 13: Meðalmeðalgildi meðaleinkunna milli þessara hópa eru marktækt mismunandi. (p = 0.000)
+
+og fleiri
+
+Enginn marktækur munur á milli hópa:
+
+Bannað innan 17 ára - Almennt: Meðalmeðalgildi meðaleinkunna milli þessara hópa eru ekki marktæk mismunandi (því p er \> 0.05). (p = 0.999)
+
+Foreldra leiðsögn - Bannað innan 17 ára: Meðalmeðalgildi meðaleinkunna milli þessara hópa eru ekki marktæk mismunandi. (p = 0.323)
+
+Hefur ekki fengið einkunn - Bannað innan 17 ára: Meðalmeðalgildi meðaleinkunna milli þessara hópa eru ekki marktæk mismunandi. (p = 0.936)
 
 #### Liður 2: Endurtakið með breytum að eigin vali
 
@@ -44,3 +129,82 @@ Breytan `rating` lýsir hvaða aldurshópum þykir við hæfi að sýna myndina 
 -   Ykkur er frjálst að kóða breyturnar á þá vegu sem ykkur þykir áhugavert og búa þannig til nýja breytur sem þið viljið bera saman. 
 
 -   Ykkur er frjálst að vinna aðeins með hluta gagnasafnins sem inniheldur þann undirhóp kvikmynda sem ykkur finnst áhugaverður.
+
+------------------------------------------------------------------------
+
+-   Skoðið hvaða gildi breytan tekur, sýnist ykkur vera einhverjar innsláttarvillur í gögnunum? Lagið þær ef svo er, annað hvort með því að leiðrétta innsláttarvillurnar eða með því að fjarlægja þær línur úr gagnasafninu. `tomatometer_status`
+
+```{=html}
+<!-- -->
+```
+-   Gefið flokkum breytunnar lýsandi heiti, annað hvort á íslensku eða ensku.
+
+    ```{r}
+    table(movies$tomatometer_status)
+    ```
+
+    Sjáum hér að breytan hefur 3 flokka, en við ætlum að breyta þeim.
+
+    ```{r}
+    movies <- movies %>%
+      mutate(tomatometer_status = case_when(
+        tomatometer_status == "Rotten" ~ "Slæm mynd ",
+        tomatometer_status == "Fresh" ~ "Góð mynd ",
+        tomatometer_status == "Certified Fresh" ~ "Mjög góð mynd "))
+
+    table(movies$tomatometer_status)
+
+    ```
+
+-   Teiknið graf sem ber einkunnagjöf kvikmyndanna skv. `audience_rating`saman við **tomatometer_status** þeirra
+
+    ```{r warning=FALSE}
+    ggplot(movies, aes(x=tomatometer_status, y= audience_rating, fill= tomatometer_status))+geom_boxplot() + 
+      labs(x = "Tomatometer Staða",
+           y = "Audience Einkunn",
+           title = "Einkunnagjöf áhorfanda miðað við tomatometer status") + scale_fill_manual(values= c('yellow', 'green', 'red'))
+
+    ```
+
+-   Næst viljið þið kanna hvort það sé munur á meðaleinkunnagjöf kvikmyndanna eftir því hvaða **tomatometer_status** þær hafa. Hvers konar tilgátupróf framkvæmið þið til að kanna það?
+
+    *Getum framkvæmt ANOVA próf fyrir meðaltalið og Bartlett-test fyrir dreifnina*
+
+-   Skrifið nákvæmlega niður hver núlltilgátan ykkar er.
+
+    *Núlltilgáta okkar í Bartlett-prófinu er:*
+
+    *H0: Dreifnin á meðaleinkunnagjöf kvikmyndanna er jöfn milli allra hópanna sem skilgreindir eru af tomatometer_status.*
+
+-   Framkvæmið tilgátuprófið í R og túlkið niðurstöðuna. Gætið ykkar að orða mjög nákvæmlega hvaða ályktun má draga af tilgátuprófinu.
+
+    ```{r}
+    bartlett.test(audience_rating ~ tomatometer_status, data=movies )
+    ```
+
+    ```{r}
+    fervik <- aov(audience_rating ~ tomatometer_status, data = movies)
+    anova(fervik)
+    ```
+
+    *Niðurstöður Bartlett-prófsins gefa til kynna að tilvikin hafi ólík dreifni milli hópanna. P-gildið er næstum núll, \< 2.2e-16, sem bendir til þess að við höfum næstum fullkomna ástæðu til að hafna núlltilgátunni um að dreifnin sé sú sama milli hópanna.*
+
+    *Ályktunin sem má draga af þessum niðurstöðum er að dreifnin á meðaleinkunnagjöf kvikmyndanna er ekki jöfn milli hópanna. Þetta bendir til þess að tomatometer_status hefur áhrif á meðaleinkunn kvikmyndanna.*
+
+-   Framkvæmið eftirápróf með skipuninni `Tukey_HSD`og túlkið niðurstöðuna. Gætið ykkar að orða mjög nákvæmlega hvaða ályktun má draga af tilgátuprófunum, þ.e.a.s. takið skýrt fram milli hverja tveggja og tveggja aldurstakmarkanahópa er munur á meðaleinkunnagjöf kvikmyndanna og á milli hverja tveggja og tveggja aldurstakmarkanahópa við getum ekkert ályktað um.
+
+```{r}
+TukeyHSD(fervik)
+```
+
+```{r}
+plot(TukeyHSD(fervik))
+```
+
+Ályktunin sem má draga er:
+
+1.  Munurinn á meðaleinkunnagjöf kvikmynda milli hópa "Mjög góð mynd" og "Góð mynd" er 8.899634, með 95% öryggisstigi milli 8.041935 og 9.757332. P-gildið (p adj) er minna en 0.05, sem þýðir að munurinn er taldur vera marktæktur.
+
+2.  Munurinn á meðaleinkunnagjöf kvikmynda milli hópa "Slæm mynd" og "Góð mynd" er -21.031611 , með 95% öryggisstigi milli -21.696080 og -20.367142. P-gildið er minna en 0.05, sem þýðir að munurinn er taldur vera marktæktur.
+
+3.  Munurinn á meðaleinkunnagjöf kvikmynda milli hópa "Slæm mynd" og "Mjög góð mynd" er -29.931245, með 95% öryggisstigi milli -30.771818 og -29.090672. P-gildið er minna en 0.05, sem þýðir að munurinn er taldur vera marktæktur.
