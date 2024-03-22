@@ -1,0 +1,147 @@
+---
+title: "Einstaklingsverkefni 4"
+author: "ÁJG"
+date: "`r Sys.Date()`"
+output: 
+  prettydoc::html_pretty:
+    theme: cayman
+    highlight: github html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+library(readr) 
+library(multcomp) 
+library(ggplot2) 
+library(dplyr)
+library(lubridate)
+```
+
+**Verkefnið**
+
+**a)** Lesið gagnaskrána inn með eftirfarandi skipun:
+
+```{r}
+ajg <- read_csv2("https://www.skra.is/library/Skrar/kaupskra/kaupskra.csv", locale = locale(encoding = "ISO8859-1"))
+
+```
+
+**b)**\
+Notið mutate() fallið til að búa til nýja breytu í gagnarammanum ykkar sem inniheldur fermetraverð eignanna, nefnið breytuna fermetraverd.
+
+```{r}
+# búa til nýja breytu fermetraverd
+ajg <- mutate(ajg, fermetraverd = kaupverd/einflm) 
+```
+
+**c)**\
+Búið til nýja breytu í gagnarammanum ykkar sem inniheldur árið sem eignin var seld, nefnið breytuna ar (t.d. með að nota year() fallið í lubridate pakkanum).
+
+```{r}
+# búa til nýja breytu ar
+ajg <- mutate(ajg, ar = year(utgdag))
+
+```
+
+**d)**\
+Notið filter() skipunina til að velja fullbúnar eignir (sjá fullbuid breytuna), sem seldar voru árið 2022, eru "Fjolbyli" eða "Serbyli" og byggja á  samningum sem eru er nothæfir (sjá nothaefur breytuna). Yfirskrifið stóra gagnaramman með þessum eignum.
+
+Ábending: Þegar velja á línur út frá tveimur eða fleiri gildum á flokkabreytu getur komið sér vel að nota %in% virkjann. Nota mætti kóðann hér að neðan til að velja línur þar sem flokkabreytan *flokkur* í gagnatöflunni *dat* tekur gildin *g1* og *g2:*
+
+nota \<- c("g1", "g2")
+
+dat \<- filter(dat, flokkur%in%nota)
+
+```{r}
+# filtera út Fjölbýli og Sérbýli seld árið 2022, með nothæfan samning og fullbúið innbú
+ajg <- filter(ajg, fullbuid == TRUE & ar == 2022 & tegund %in% c("Fjolbyli", "Serbyli") & onothaefur_samningur == 0)
+
+```
+
+**e)\
+**Veljið ykkur þrjú póstnúmer til að vinna með. Yfirskrifið gagnaramman í d) lið með eignum úr þessum þremur póstnúmerum. Þið skulið nota þennan gagnaramma í verkefninu.
+
+```{r}
+# veljum 3 póstnúmer
+postnumer <- c(201, 112, 800)
+ajg <- filter(ajg, postnr %in% postnumer)
+```
+
+**f)**\
+Teiknið mynd sem sýnir stærð eignanna í rammanum ykkar (það eiga ekki að vera aðrar breytur á myndinni). Eru einhverjir gagnapunktar sem koma í ljós sem mögulega þarf að skoða sérstaklega? Ef svo er skulið þið gera það.
+
+```{r}
+# 3 fermetra lotur 
+ggplot(ajg, aes(x = einflm)) + 
+  geom_histogram(binwidth = 3, fill = "skyblue", color= "black") + labs(x="Stærð eignar í fermetrum", y="Tíðni", title ="Stærð")
+
+# Engir punktar sem þarf að skoða sérstaklega, dreifingin er frekar eðlileg
+
+
+```
+
+**g)**\
+Teiknið mynd sem sýnir kaupverð eignanna í rammanum ykkar (það eiga ekki að vera aðrar breytur á myndinni). Eru einhverjir gagnapunktar sem koma í ljós sem mögulega þarf að skoða sérstaklega? Ef svo er skulið þið gera það.
+
+```{r}
+# Hver milljón / per lota
+ggplot(ajg, aes(x = kaupverd)) + 
+  geom_histogram(binwidth = 1000, fill="lightgreen", color="black") + labs(x="Kaupverð eignar", y="Tíðni", title="Kaupverð")
+
+# Engir punktar sem þarf að skoða sérstaklega, dreifingin er frekar eðlileg
+```
+
+**h)\
+**Teiknið viðeigandi mynd sem sýnir breyturnar fermetraverd og postnr saman á einni mynd.
+
+```{r}
+ajg <- mutate(ajg, postnr = factor(postnr))
+
+ggplot(ajg, aes(x=postnr, y= fermetraverd, fill=postnr)) + geom_boxplot() +
+scale_fill_manual(values=c('lightblue', 'yellow', 'pink')) + 
+labs(x="Póstnúmer", y="Fermetraverð", title = "Fermetraverð eftir Póstnúmerum")
+
+```
+
+**i)\
+**Kannið með viðeigandi tilgátuprófi hvort munur sé á meðalfermetraverði fjölbýla í póstnúmerunum þremur sem þið völduð í lið e). Halda þær forsendur sem þurfa að gilda til að nota aðferðina sem þið beittuð? 
+
+*Ég notaði aov próf, sem er próf á tveim eða fleiri meðaltölum, svo aðferðin uppfyllti þær forsendur sem ég hafði í verkefninu.*
+
+```{r}
+fervik <- aov(ajg$fermetraverd ~ ajg$postnr)
+anova(fervik)
+
+```
+
+*Niðurstaðan úr prófinu segir að það sé marktækur munur á meðaltölum milli sveitafélaga, svo að póstnúmer hefur áhrif á fermetraverð.*
+
+**j)**\
+Teiknið viðeigandi mynd sem sýnir sambandið á milli stærðar og söluverðs eigna í póstnúmerunum. 
+
+```{r}
+ggplot(ajg, aes(x = kaupverd, y = einflm)) + geom_point(color="cyan") +facet_grid( postnr ~.) +
+  labs(x="Söluverð", y= "Fermetrar húsar", title="Samband stærðar og söluverðs milli póstnúmera")
+  
+```
+
+**k)\
+**Smíðið línulegt líkan sem lýsir sambandinu á milli stærðar og kaupverðs eigna í póstnúmerunum.
+
+```{r}
+
+linear_model <- lm(kaupverd ~ einflm, data = ajg)
+
+```
+
+**l)**\
+Skoðið leifar líkansins í lið k) til að meta hvort forsendur líkansins halda.
+
+```{r}
+ggplot(linear_model, aes(sample= .resid)) + stat_qq(color="purple")
+# forsendur líkansis halda
+
+```

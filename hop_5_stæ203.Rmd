@@ -134,9 +134,8 @@ Hefur ekki fengið einkunn - Bannað innan 17 ára: Meðalmeðalgildi meðaleink
 
 -   Skoðið hvaða gildi breytan tekur, sýnist ykkur vera einhverjar innsláttarvillur í gögnunum? Lagið þær ef svo er, annað hvort með því að leiðrétta innsláttarvillurnar eða með því að fjarlægja þær línur úr gagnasafninu. `tomatometer_status`
 
-```{=html}
 <!-- -->
-```
+
 -   Gefið flokkum breytunnar lýsandi heiti, annað hvort á íslensku eða ensku.
 
     ```{r}
