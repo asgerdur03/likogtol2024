@@ -1,0 +1,34 @@
+---
+title: "Glósur fyrir lokapróf"
+output: html_notebook
+---
+
+## Basic R shit
+
+lesa in library
+```{r}
+library(tidyverse)
+library(knitr)
+
+
+```
+
+
+
+https://ahj.hi.is/NYC_subway_traffic.csv
+
+Lesa inn mögulegar skrár
+
+```{r}
+# csv er fyrir 0.0, csv2 er fyrir 0,0
+poll <- read.table("https://ahj.hi.is/spurningar_um_lifid_24.csv", sep = ";", header = T, dec = ",")
+
+tomatoes <- read_csv("https://ahj.hi.is/Rotten_Tomatoes_Movies.csv")
+
+kaupskra <- read_csv2("https://ahj.hi.is/kaupskra.csv", locale = locale(encoding = "ISO8859-1"))
+
+nyc <- read_csv("https://ahj.hi.is/NYC_subway_traffic.csv
+")
+```
+
+
