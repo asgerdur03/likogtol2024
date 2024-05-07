@@ -363,3 +363,32 @@ tilgátupróf fyrir ρ
 cor.test(data$col1, data$col2)
 
 ```
+
+## Meira auka
+
+#### Endurvalsaðferð til að reikna öryggisbil
+
+```{r}
+tmp <- replicate(100000, mean(sample(dat$breyta=='Já', replace=T), na.rm=T))
+quantile(tmp, c(0.025, 0.975))
+```
+
+#### Umraðanapróf
+
+```{r}
+tapply(dat$A, dat$B, min)
+diff(tapply(dat$A, dat$B, min))
+tmp <- replicate(100000, diff(tapply(dat$A, sample(dat$B), min)))
+hist(tmp)
+quantile(tmp, c(0.025, 0.975))
+```
+
+## Todo
+
+-   skoða glærur, glósa upp úr þeim
+
+-   skoða gömul verkefni frá öðrum?
+
+-   læra að túlka niðurstöður úr prófunum
+
+-   setja á posticloud, rétt fyrir próf

@@ -263,10 +263,4 @@ Fyrir n=10 leit úrtaksdreifing meðaltals ekkert eins og normaldreifing.
 
 Það var ekki fyrr en í n=100, þegar við gátum verið vissar að grafið sem við sáum var normaldreift
 
-#### Framlag hópameðlima
 
-Báðir meðlimir unnu saman að öllum liðum, en með áherslu á ólýka liði.
-
-Vilborg: 1, 2, 6
-
-Ásgerður: 3, 4, 5

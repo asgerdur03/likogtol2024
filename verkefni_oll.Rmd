@@ -1,0 +1,1111 @@
+---
+title: "Hópverkefni 1 stæ203"
+author: "Ásgerður, Vilborg"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+```
+
+# Hóp1
+
+## Liður 1: Gerð breyta
+
+Lesið inn gögnin og kannið hvort allar breytur séu af réttri gerð að ykkar mati, þ.e.a.s. að talnabreytur séu vistaðar sem talnabreytur og flokkabreytur sem flokkabreytur. Ef einhverjar breytur eru ekki af þeirri gerð sem þið teljið að þær eigi að vera, notið þá R til að kóða þær á réttan hátt.
+
+```{r echo = F, message=FALSE}
+library(tidyverse)
+```
+
+```{r}
+dat <- read.table("spurningar_um_lifid_24.csv", sep = ";", header = T, dec = ",")
+str(dat)
+```
+
+Finnst að mætti breyta:
+
+```{r}
+dat <- mutate(dat, ferdamati_skoli = factor(ferdamati_skoli))
+dat <- mutate(dat, is = factor(is))
+dat <- mutate(dat, fri = factor(fri))
+dat <- mutate(dat, tonleikar = factor(tonleikar))
+dat <- mutate(dat, stefnumot = factor(stefnumot))
+dat <- mutate(dat, skemmtilegur = (factor(skemmtilegur)))
+
+```
+
+## Liður 2: Flokkar flokkabreyta
+
+Veljið eins margar flokkabreytur og eru í hópnum ykkar til að kanna nánar. Eru einhverjar þeirra með óþarflega marga flokka? Ef svo er, búið þá til nýja breytu með færri flokkum þar sem að viðeigandi flokkar hafa verið sameinaðir. R raðar flokkum í stafrófsröð, væri eðlilegra að hafa einhverja aðra röð á flokkunum í flokkabreytunni ykkar? Ef svo, raðið þeim í þá röð.
+
+2 í hóp
+
+Við völdum flokkabreyturnar **is** og **stefnumot** . Okkur fannst það óþarfir að breyta röðununni eða sameina flokkana, en ákvöðum að gera það samt.
+
+Við sameinuðum **stefnumot** í flokkana inni, og uti.
+
+```{r}
+levels(dat$stefnumot) <- c('uti', 'inni', 'inni', 'uti')
+```
+
+Við ætluðum að raða **is** í röð eftir uppáhalds okkar, en þeir voru nú þegar í þeirri röð
+
+```{r}
+levels(dat$is)
+```
+
+## Liður 3: Gildi talnabreyta
+
+Veljið eins margar talnabreytur og eru í hópnum ykkar til að kanna nánar. Eru einhverjar talnabreytur með óraunhæf gildi? Ef svo er, kóðið þau gildi sem NA.
+
+Völdum gildin **likamsraekt_dagar** og **systkini_fjoldi**
+
+**likamsraekt_dagar** völdum við vegna þess að fjöldi daga í vikur er í mesta lagi 7, svo öll svör lægri en 0, eða hærri en 8 yrðu óraunhæf.
+
+```{r}
+dat$likamsraekt_dagar[dat$likamsraekt_dagar < 0|dat$likamsraekt_dagar>7] <- NA
+
+```
+
+## Liður 4: Fjöldi svara
+
+Hversu mörg svöruðu einhverri spurningu spurningalistans?
+
+Allir sem hafa röð svöruðu amk einni spurningu, svo við getum talið raðirnar, eða skoðað hvaða raðir hafa amk eitt svar.
+
+```{r}
+sum(rowSums(!is.na(dat)) > 0)
+nrow(dat)
+
+```
+
+Hversu mörg voru með nothæf svör við öllum spurningum spurningalistans?
+
+Búum til nýja töflu sem inniheldur bara þær línur sem innihalda ekkert NA.
+
+```{r}
+tab2 <- na.omit(dat)
+
+nrow(tab2)
+```
+
+# Hóp 2
+
+```{r echo = F, message=FALSE}
+library(tidyverse)
+library(ggplot2)
+```
+
+## Liður 1: Flokkabreyta
+
+Veljið eina flokkabreytanna sem þið skoðuðuð í Hópverkefni 1. Teiknið graf sem lýsir úrtaksdreifingu hennar og lýsið útkomunni stuttlega.
+
+Lesum inn excel skjal úr hópverkefni 1, og breytum **is** breytuni í Factor breytu.
+
+```{r}
+dat <- read.table("spurningar_um_lifid_24.csv", sep = ";", header = T, dec = ",")
+
+dat <- mutate(dat, is = factor(is))
+```
+
+Breytum grafinu aðeins og gerum það fallegra.
+
+```{r echo=TRUE}
+ggplot(data = dat, aes(is, fill = is)) + 
+geom_bar() + labs(title = "Uppáhalds Ís", y = "fjöldi") + scale_fill_manual(values = c("#f542e6", "#452e2e", "#e3e3cf"))
+```
+
+Grafið sínir hvaða ís er uppáhaldsís nemenda í áfanganum. Við getum lesið úr því að uppáhaldsís flestra er súkkulaðiís, en uppáhaldssís fæstra er jarðaberjaís.
+
+## Liður 2: Talnabreyta
+
+Veljið eina talnabreytanna sem þið skoðuðuð í Hópverkefni 1. Teiknið graf sem lýsir úrtaksdreifingu hennar og lýsið lögun hennar.
+
+```{r}
+dat$likamsraekt_dagar[dat$likamsraekt_dagar < 0|dat$likamsraekt_dagar>7] <- NA
+```
+
+```{r warning =FALSE}
+ggplot(dat, aes(x = likamsraekt_dagar)) + geom_histogram(binwidth = 1, color= "darkblue", fill= "lightblue")+ xlab("dagar á viku") + ylab("fjöldi") 
+```
+
+## Liður 3: Samband talnabreytu og flokkabreytu.
+
+Veljið eina talnabreytanna og eina flokkabreytanna sem þið skoðuðuð í Hópverkefni 1. Teiknið graf sem lýsir sambandi þessara tveggja breyta og lýsið útkomunni stuttlega.
+
+líkamsrækt_dagar & ís
+
+```{r warning=FALSE}
+ggplot(data = dat, aes(x=is, y=likamsraekt_dagar))+geom_boxplot()
+```
+
+## Liður 4: Samband tveggja talnabreyta
+
+Veljið tvær talnabreytanna sem þið skoðuðuð í Hópverkefni 1. Teiknið graf sem lýsir sambandi þessara tveggja breyta og lýsið útkomunni stuttlega.
+
+ferdatimi_skoli og systkini_fjoldi
+
+```{r warning=FALSE}
+ggplot(data = dat, aes(x = ferdatimi_skoli , y =systkini_fjoldi ))+ geom_point()
+```
+
+# Eins 2
+
+Ég les inn töfluna "spurningar_um_lifid_24.csv"
+
+```{r}
+dat <- read.table("spurningar_um_lifid_24.csv", sep = ";", header = T, dec = ",")
+```
+
+## Liður 1: Flokkabreyta
+
+Veljið eina flokkabreytanna sem þið skoðuðuð í Hópverkefni 1. Teiknið graf sem lýsir úrtaksdreifingu hennar og lýsið útkomunni stuttlega með viðeigandi lýsistærðum.
+
+```{r}
+dat <- mutate(dat, is = factor(is))
+```
+
+Teiknum upp grafið fyrir flokkabreytuna **is**, í skemmtilegum litum
+
+```{r echo=TRUE}
+ggplot(data = dat, aes(is, fill = is)) + 
+geom_bar() + labs(title = "Uppáhalds Ís", y = "fjöldi") + scale_fill_manual(values = c("#f542e6", "#452e2e", "#e3e3cf"))
+```
+
+Finnum fjölda gilda með *table* skipuninni
+
+```{r}
+table(dat$is)
+
+```
+
+Sjáum úr bæði grafinu og töfluni að tíðasta gildið er *súkkulaðiís*.
+
+## Liður 2: Talnabreyta
+
+Veljið eina talnabreytanna sem þið skoðuðuð í Hópverkefni 1. Teiknið graf sem lýsir úrtaksdreifingu hennar og lýsið lögun hennar með viðeigandi lýsistærðum.
+
+```{r}
+dat$likamsraekt_dagar[dat$likamsraekt_dagar < 0|dat$likamsraekt_dagar>7] <- NA
+```
+
+Ég valdi að nota breytuna **likamsraekt_dagar**.
+
+```{r warning=FALSE}
+ggplot(dat, aes(x = likamsraekt_dagar)) + geom_histogram(binwidth = 1, color= "#46ad0e", fill= "#0c9bfa")+ xlab("dagar á viku") + ylab("fjöldi") 
+```
+
+```{r}
+summary(dat$likamsraekt_dagar)
+```
+
+```{r}
+sd(dat$likamsraekt_dagar, na.rm = T)
+```
+
+Sjáum að lægsta og hæsta gildi breytunar er *0* og *7*.
+
+Meðaltalið er *2.884* og miðgildið er *3*.
+
+Staðalfrávikið er *2.075605*.
+
+```{r}
+quantile(dat$likamsraekt_dagar, na.rm = T)
+```
+
+Síðan sjáum við hér fyrir ofan *hlutfallsmörkin*.
+
+## Liður 3: Samband talnabreytu og flokkabreytu.
+
+Veljið eina talnabreytanna og eina flokkabreytanna sem þið skoðuðuð í Hópverkefni 1. Teiknið graf sem lýsir sambandi þessara tveggja breyta og lýsið útkomunni stuttlega með viðeigandi lýsistærðum. Hér gæti verið smart að setja upp litla töflu.
+
+```{r warning=FALSE}
+ggplot(data = dat, aes(x = is, y = likamsraekt_dagar)) +
+  geom_boxplot(fill = "pink", color = "yellow", alpha = 0.7) +
+  theme_minimal() +
+  labs(title = "Boxplot af Hreytingu nemenda og uppáhaldsís þeirra",
+       x = "Flokkur",
+       y = "Likamsraekt Dagar")
+```
+
+```{r}
+library(dplyr)
+library(knitr)
+
+ice_cream_stats <- dat %>%
+  group_by(is) %>%
+  summarise(
+    Median = median(likamsraekt_dagar, na.rm = TRUE),
+    Lower_Quartile = quantile(likamsraekt_dagar, 0.25, na.rm = TRUE),
+    Upper_Quartile = quantile(likamsraekt_dagar, 0.75, na.rm = TRUE),
+    Mean = mean(likamsraekt_dagar, na.rm = TRUE),
+    SD = sd(likamsraekt_dagar, na.rm = TRUE),
+    Min = min(likamsraekt_dagar, na.rm = TRUE),
+    Max = max(likamsraekt_dagar, na.rm = TRUE)
+  )
+
+
+print(ice_cream_stats)
+
+kable(ice_cream_stats, format = "markdown", 
+      col.names = c("Ice Cream Category", "Median", "Lower Quartile", "Upper Quartile", "Mean", "SD", "Min", "Max"))
+
+
+```
+
+Hér sést taflan með lýsistærðunum, flokkað eftir ísbragðtegundum.
+
+## Liður 4: Samband tveggja talnabreyta
+
+Veljið tvær talnabreytanna sem þið skoðuðuð í Hópverkefni 1. Teiknið graf sem lýsir sambandi þessara tveggja breyta og lýsið útkomunni stuttlega með viðeigandi lýsitærðum.
+
+```{r warning=FALSE}
+ggplot(data = dat, aes(x = ferdatimi_skoli, y = systkini_fjoldi, color = systkini_fjoldi)) +
+  geom_point(shape = 10, size = 3, alpha = 0.6) +
+  
+  scale_color_gradient(low = "blue", high = "red") +
+ 
+  theme_minimal() +
+ 
+  labs(title = "Scatterplot of systkini_fjoldi by ferdatimi_skoli",
+       x = "Ferðatími í skóla (minutes)",
+       y = "Systkini fjöldi")
+```
+
+```{r}
+
+correlation <- cor(dat$ferdatimi_skoli, dat$systkini_fjoldi, use = "complete.obs")
+
+model <- lm(systkini_fjoldi ~ ferdatimi_skoli, data = dat)
+slope <- coef(model)[2]
+
+
+
+residuals <- residuals(model)
+
+statistics_table <- data.frame(
+  "Statistic" = c("Correlation", "Slope" ),
+  "Value" = c(correlation, slope)
+)
+
+print(statistics_table)
+
+```
+
+Sjáum að fylgnin milli breytana er mjög lítil, og þær eru alveg ótengdar. Línulegt samband eir einnin nærri ekkert, svo breyturnar eru mjög ótengdar.
+
+```{r}
+summary(dat$systkini_fjoldi)
+summary(dat$ferdatimi_skoli)
+```
+
+Hér sjáum við svo nokka hluti um hvora breytu, meðaltal, miðgildi, min, max o.fl.
+
+# Hóp 3
+
+**ATH** Illa misskilið verkefni
+
+```{r}
+library(tidyverse)
+library(ggplot2)
+set.seed(1)
+```
+
+#### Liður 1: Líkindadreifingar slembinna fyrirbæra
+
+-   Komið með dæmi um þrjú slembin fyrirbæri, X, Y og Z, eitt sem má lýsa með Poisson dreifingu, eitt sem má lýsa með tvíkostadreifingu og það þriðja sem má lýsa með normaldreifingu.
+
+-   Lítið á útkomu slembnu fyrirbæranna sem slembistærðirnar X, Y og Z og veljið heppileg gildi á stikum líkindadreifinganna sem lýsa þeim.
+
+-   Teiknið mynd af þéttifalli/massafalli hverrrar og einnar slembistærðar með því að herma 100 000 útkomur þeirra (með `rnorm`, `rbinom`eða `rpois`) og teikna graf með útkomunum.
+
+```{r }
+X <- rpois(100000, 1) # fjöldi veikindadaga á mánuði hjá stafsfólki
+Y <- rnorm(100000, 1,10) # Meðalhiti á köldum stað
+Z <- rbinom(100000,3,0.1) # Að hitta 3 körfur í röð, ef hvart kast er 10% líkur á að hitta
+
+hist(X, breaks = 30, col = "lightblue", main = "Poisson dreifing", xlab = "Veikindadagar", ylab = "Starfsfólk")
+hist(Y, breaks = 30, col = "lightgreen", main = "Normal dreifing", xlab = "Hitastig", ylab = "Tíðni")
+hist(Z, breaks = 30, col = "lightpink", main = "Binomial dreifing", xlab = "Körfur hittar", ylab = "Tíðni")
+```
+
+#### Liður 2: Búum til mörg lítil úrtök (n=10)
+
+-   Núna ætlið þið skoða hvað myndi gerast ef þið mynduð framkvæma tilraun þar sem þið veljið úrtak af stærð **10** fyrir hverja af slembistærðunum X, Y og Z, þ.e.a.s. þrjú ólík úrtök, hvert með 10 útkomum.
+
+-   Fyrir hvert úrtak ætlið þið að reikna lýsistærðirnar meðaltal og miðgildi.
+
+-   Þetta ætlið þið að endurtaka mjög oft (100 000 sinnum) og sjá hve mikið lýsistærðirnar geta breyst í hvert skipti sem nýtt úrtak er valið.
+
+-   Ein leið til þess er að búa til gagnatöflu með sex dálkum en 100 000 línum. Einn dálkur fyrir hverja samsetningu af slembistærð og lýsistærð og eina línu fyrir hvert úrtak. Hér er kóðabútur til að koma ykkur af stað:
+
+```{r }
+dat10 <- data.frame(
+  medal_x = replicate(100000, mean(rnorm(10, 0, 1))),      # Meðaltal úrtaks fyrir X
+  midgildi_x = replicate(100000, median(rnorm(10, 0, 1))), # Miðgildi úrtaks fyrir X
+  
+  medal_y = replicate(100000, mean(rpois(10, 1))),         # Meðaltal úrtaks fyrir Y
+  midgildi_y = replicate(100000, median(rpois(10, 1))),    # Miðgildi úrtaks fyrir Y
+  
+  medal_z = replicate(100000, mean(rbinom(10, 3, 0.1))),   # Meðaltal úrtaks fyrir Z
+  midgildi_z = replicate(100000, median(rbinom(10, 3, 0.1))) # Miðgildi úrtaks fyrir Z
+)
+
+
+```
+
+```{r}
+medaltal <- colMeans(dat10)
+print(medaltal)
+```
+
+```{r}
+urtak10 <- sample_n(dat10, 10)
+knitr::kable(urtak10)
+```
+
+#### Liður 3: Berum saman slembistærðir og lýsistærðir
+
+-   Núna ætlið þið að áætla úrtaksdreifingu lýsistærðanna sem þið voruð að reikna með því að teikna stuðlarit hvers og eins dálks (alls sex gröf).
+
+-   Fyrir hvaða slembistærðir og lýsistærðir virðist úrtaksdreifing lýsistærðanna samfelld?
+
+-   Fyrir hvaða slembistærðir og lýsistærðir virðist úrtaksdreifing lýsistærðanna samhverf?
+
+-   Reiknið meðaltal hvers og eins dálks. Hversu líkt er það væntigildi slembistærðanna X, Y og Z í hverju tilviki?
+
+-   Reiknið dreifni hvers og eins dálks. Er mikill munur er á dreifni úrtaksdreifingu meðaltals og dreifni úrtaksdreifingu miðgildis sömu slembistærðar?
+
+```{r}
+ggplot(urtak10, aes(x = medal_x)) +
+  geom_histogram(fill = "skyblue", color = "black", bins = 30) +
+  labs(title = "Histogram of medal_x", x = "medal_x", y = "Fjöldi") +
+  theme_minimal()
+
+ggplot(urtak10, aes(x = midgildi_x)) +
+  geom_histogram(fill = "skyblue", color = "black", bins = 30) +
+  labs(title = "Histogram of midgildi_x", x = "midgildi_x", y = "Fjöldi") +
+  theme_minimal()
+
+ggplot(urtak10, aes(x = medal_y)) +
+  geom_histogram(fill = "skyblue", color = "black", bins = 30) +
+  labs(title = "Histogram of medal_y", x = "medal_y", y = "Fjöldi") +
+  theme_minimal()
+
+ggplot(urtak10, aes(x = midgildi_y)) +
+  geom_histogram(fill = "skyblue", color = "black", bins = 30) +
+  labs(title = "Histogram of midgildi_y", x = "midgildi_y", y = "Fjöldi") +
+  theme_minimal()
+
+ggplot(urtak10, aes(x = medal_z)) +
+  geom_histogram(fill = "skyblue", color = "black", bins = 30) +
+  labs(title = "Histogram of medal_z", x = "medal_z", y = "Fjöldi") +
+  theme_minimal()
+
+ggplot(urtak10, aes(x = midgildi_z)) +
+  geom_histogram(fill = "skyblue", color = "black", bins = 10) +
+  labs(title = "Histogram of midgildi_z", x = "midgildi_z", y = "Fjöldi") +
+  theme_minimal()
+
+
+
+```
+
+```{r}
+mean10 <- colMeans(urtak10) #meðaltal
+var10 <- apply(urtak10, 2, var) #dreifni
+
+tafla10 <- data.frame(Mean = mean10, Variance = var10)
+
+knitr::kable(tafla10)
+```
+
+Samhverf: midgilidi_x
+
+Samfelld: medal_z
+
+Með því að bera saman meðaltöl X,Y og Z fundum við út að Y og Z meðaltöl voru nálægt væntigildinu en X var mjög langt frá því.
+
+Mikill munur er á dreifni meðaltals og miðgildis fyrir allar slembistærðirnar.
+
+#### Liður 4: Stækkum úrtakið (n=30)
+
+-   Endurtakið liði 2 og 3, nema nú fyrir úrtak af stærð 30.
+
+```{r}
+urtak30 <- sample_n(dat10, 30)
+knitr::kable(urtak30)
+```
+
+```{r}
+ggplot(urtak30, aes(x = medal_x)) +
+  geom_histogram(fill = "pink", color = "black", bins = 30) +
+  labs(title = "Histogram of medal_x", x = "medal_x", y = "Fjöldi") +
+  theme_minimal()
+
+ggplot(urtak30, aes(x = midgildi_x)) +
+  geom_histogram(fill = "pink", color = "black", bins = 30) +
+  labs(title = "Histogram of midgildi_x", x = "midgildi_x", y = "Fjöldi") +
+  theme_minimal()
+
+ggplot(urtak30, aes(x = medal_y)) +
+  geom_histogram(fill = "pink", color = "black", bins = 30) +
+  labs(title = "Histogram of medal_y", x = "medal_y", y = "Fjöldi") +
+  theme_minimal()
+
+ggplot(urtak30, aes(x = midgildi_y)) +
+  geom_histogram(fill = "pink", color = "black", bins = 30) +
+  labs(title = "Histogram of midgildi_y", x = "midgildi_y", y = "Fjöldi") +
+  theme_minimal()
+
+ggplot(urtak30, aes(x = medal_z)) +
+  geom_histogram(fill = "pink", color = "black", bins = 30) +
+  labs(title = "Histogram of medal_z", x = "medal_z", y = "Fjöldi") +
+  theme_minimal()
+
+ggplot(urtak30, aes(x = midgildi_z)) +
+  geom_histogram(fill = "pink", color = "black", bins = 10) +
+  labs(title = "Histogram of midgildi_z", x = "midgildi_z", y = "Fjöldi") +
+  theme_minimal()
+
+```
+
+```{r}
+mean30 <- colMeans(urtak30) #meðaltal
+var30 <- apply(urtak30, 2, var) #dreifni
+
+tafla30 <- data.frame(Mean = mean30, Variance = var30)
+
+knitr::kable(tafla30)
+```
+
+Samfelld: medal_z
+
+Samhverf: midgildi_x, medal_z
+
+Nú er meðaltal X nær væntigildinu, enn ekki nærri því jafn nálægt og Y og Z, sem eru aftur heldur nálægt væntigildum sínum
+
+Sjáum að munurinn á drefini meðaltals og miðgildis sömu slembistærðar er heldur stór, en dreifnin á miðgildinu er u.þ.b helmingin meiri en á meðaltali sömu stærðar
+
+#### Liður 5: Stækkum úrtakið enn meir (n=100)
+
+-   Endurtakið liði 2 og 3, nema nú fyrir úrtak af stærð 100.
+
+```{r}
+urtak100 <- sample_n(dat10, 100)
+knitr::kable(urtak100)
+```
+
+```{r}
+ggplot(urtak100, aes(x = medal_x)) +
+  geom_histogram(fill = "green", color = "black", bins = 30) +
+  labs(title = "Histogram of medal_x", x = "medal_x", y = "Fjöldi") +
+  theme_minimal()
+
+ggplot(urtak100, aes(x = midgildi_x)) +
+  geom_histogram(fill = "green", color = "black", bins = 30) +
+  labs(title = "Histogram of midgildi_x", x = "midgildi_x", y = "Fjöldi") +
+  theme_minimal()
+
+ggplot(urtak100, aes(x = medal_y)) +
+  geom_histogram(fill = "green", color = "black", bins = 30) +
+  labs(title = "Histogram of medal_y", x = "medal_y", y = "Fjöldi") +
+  theme_minimal()
+
+ggplot(urtak100, aes(x = midgildi_y)) +
+  geom_histogram(fill = "green", color = "black", bins = 30) +
+  labs(title = "Histogram of midgildi_y", x = "midgildi_y", y = "Fjöldi") +
+  theme_minimal()
+
+ggplot(urtak100, aes(x = medal_z)) +
+  geom_histogram(fill = "green", color = "black", bins = 30) +
+  labs(title = "Histogram of medal_z", x = "medal_z", y = "Fjöldi") +
+  theme_minimal()
+
+ggplot(urtak100, aes(x = midgildi_z)) +
+  geom_histogram(fill = "green", color = "black", bins = 10) +
+  labs(title = "Histogram of midgildi_z", x = "midgildi_z", y = "Fjöldi") +
+  theme_minimal()
+
+```
+
+```{r}
+mean100 <- colMeans(urtak100) #meðaltal
+var100 <- apply(urtak100, 2, var) #dreifni
+
+tafla100 <- data.frame(Mean = mean100, Variance = var100)
+
+knitr::kable(tafla100)
+```
+
+Samfelld: medal_x
+
+Samhverf: medal_x, medal_y, midgildi_y, medal_z
+
+Þessi breytistærð er án efa sú sem skilaði meðaltali næst væntigildinu fyrir allar stærðirnar. Y og Z eru nánæst þær sömu, og X hefur aldrei verið nær.
+
+Sjáum að munurinn á drefini meðaltals og miðgildis sömu slembistærðar er heldur stór, en dreifnin á miðgildinu er u.þ.b helmingin meiri en á meðaltali sömu stærðar
+
+#### Liður 6: Berum saman úrtaksstærðir
+
+-   Beriið núna saman úrtaksdreifingu **meðaltals** fyrir slembistærðirnar X, Y og Z fyrir þessar þrjár ólíku úrtaksstærðir. Hversu stórt þurfti úrtakið að vera (n=10, n=30 eða n=100) til að úrtaksdreifing meðaltalsins líktist normaldreifingu?
+
+Fyrir n=10 leit úrtaksdreifing meðaltals ekkert eins og normaldreifing.
+
+Þegar úrtakið stækkaði í n= 30, byrjaði úrtaksdreifingin að líta aðeins út eins og normaldreifing, en þó ekki alveg.
+
+Það var ekki fyrr en í n=100, þegar við gátum verið vissar að grafið sem við sáum var normaldreift
+
+# Hóp 4
+
+```{r}
+library(tidyverse)
+library(ggplot2)
+```
+
+### Liður 1
+
+Skoðið fyrst eina flokkabreytu úr spurningalistanum Handahófskenndar spurningar um lífið.
+
+```{r}
+dat <- read.table("spurningar_um_lifid_24.csv", sep = ";", header = T, dec = ",")
+dat <- mutate(dat, hljodfaeri = factor(hljodfaeri))
+dat <- mutate(dat, namskeid = factor(namskeid))
+```
+
+-   Teiknið graf sem lýsir útkomum flokkabreytunnar.
+
+```{r}
+ggplot(data = dat, aes(hljodfaeri, fill = hljodfaeri)) + 
+geom_bar() + labs(title = "Spilaru á hljóðfæri", y = "fjöldi") + scale_fill_manual(values = c("lightblue", "pink"))
+
+```
+
+-   Tilgreinið hvaða útkoma flokkabreytunnar var algengust. Reiknið 95% öryggisbil fyrir hlutfall tilvika þegar flokkabreytan hlýtur þessa útkomu (köllum þetta hlutfall $p$).
+
+    ```{r}
+    table(dat$hljodfaeri)
+    binom.test(table(dat$hljodfaeri))
+    ```
+
+-   Lýsið því hvað yrðingin: $H_{0}: p = 0.5$ þýðir
+
+*Yrðingin þýðir að núlltilgátan okkar sé að hlutfall þýðisins sé jafnt 0.5, eða að hlutfall þýðisins sé skipt 50/50 milli svarmöguleika.*
+
+-   Notið 95% öryggisbilið sem þið reiknuðuð til að álykta hvort þið hafnið þessari núlltilgátu eða ekki.
+
+*Við sjáum að 95% öryggisbilið okkar inniheldur ekki* $0.5$, *svo við höfnum núlltilgátuni, þar sem neðri mörkin eru hærri en 0.5 \< 0.5128524*
+
+### Liður 2
+
+Skoðið aftur sömu flokkabreytu og þið könnuðuð í Lið 1.
+
+-   Notið skipunina facet_grid til að teikna flokkabreytuna annars vegar fyrir nemendur sem eru í námskeiðinu STÆ209G og hins vegar fyrir aðra nemendur.
+
+    ```{r}
+    ggplot(dat, aes(x= hljodfaeri))+geom_bar(color="black", fill="green")+facet_grid(. ~ namskeid)+
+    labs(title = "Hljóðfærakunnátta eftir námskeiði", y = "Fjöldi", x= "Kunna á hljóðfæri?") 
+
+    ```
+
+-   Látum $\hat{p}_{1}$ vera hlutfall tilvika þegar flokkabreytan hlýtur útkomuna úr lið 1 meðal nemenda í námskeiðinu STÆ209G en $\hat{p}_{2}$ vera hlutfall tilvika þegar flokkabreytan hlýtur útkomuna úr lið 1 meðal annarra nemenda.
+
+    ```{r}
+    prop.table(table(dat$namskeid,dat$hljodfaeri), margin=1)
+
+    ```
+
+    $\hat{p}_{1}=0.5704225$
+
+    $\hat{p}_{2}=0.5865385$
+
+-   Lýsið muninum á $p_{1}$ og $\hat{p}_{1}$ (takið eftir hattinum).
+
+*Munurinn er að* $p_1$ *táknar líkurnar á að atburður eigi sér stað, en* $\hat {p_1}$ *er líkurnar líkurnar í ákveðnu úrtaki.*
+
+-   Lýsið því hvað núlltilgátan: $H_{0}: p_1 = p_2$ þýðir.
+
+*núlltilgátan þýðir að við skoðum hvort hlutföll beggja þýða séu jöfn, eða eins.*
+
+-   Framkvæmið viðeigandi tilgátupróf til að prófa þá núlltilgátu og túlkið niðurstöðuna.
+
+    ```{r}
+    prop.test(table(dat$namskeid,dat$hljodfaeri))
+    ```
+
+*Sjáum hér að* $p_1 \neq p_2$, *svo að núlltigátan stenst ekki.*
+
+### Liður 3
+
+Skoðið núna tvær nýjar flokkabreytur úr spurningalistanum *Handahófskenndar spurningar um lífið*.
+
+-   Teiknið graf sem lýsir samspili þessara tveggja breyta
+
+-   Framkvæmið viðeigandi tilgátupróf til að kanna hvort það séu tengsl milli þessara tveggja breyta
+
+-   Túlkið niðurstöðuna
+
+### Framlag hópmeðlima
+
+Ásgerður: 1,2
+
+Vilborg: 2,3
+
+# Ein 3
+
+```{r}
+
+library(readr) # Lesum inn .csv skjal með upplýsingum um lestarferðir
+subs <- read_csv("NYC_subway_traffic.csv")
+
+```
+
+#### Liður 1: Fjöldi innstiga á tiltekna lestarstöð klukkan 08
+
+Breytan `entries.08` lýsir fjölda innstiga í tiltekna lest á tiltekinni lestarstöð klukkan 08:00 um morgun.
+
+-   Veljið ykkur eina lestarstöð (Stop Name) og búið til minna gagnasafn með eingöngu mælingum frá þeirri lestarstöð.
+
+    ```{r}
+    stop_23st <- subs %>%
+                  filter(`Stop Name` == "23 St")
+
+    ```
+
+-   Teiknið graf sem sýnir fjölda innstiga klukkan 08 á þá lestarstöð.
+
+    ```{r}
+    ggplot(data=stop_23st, aes(x= entries.08)) + geom_histogram(binwidth = 10, fill="#69b3a2", color="#111111") + labs(x= "Entries", y="Fjöldi skipta")
+
+
+    ```
+
+-   Reiknið meðalfjölda innstiga á þessa tilteknu lestarstöð ásamt 95% öryggisbili
+
+    ```{r}
+    mean(stop_23st$entries.08) # Meðalfjöldi innstiga
+
+    t <- t.test(stop_23st$entries.08)
+
+
+    print(t[["conf.int"]]) # 95% öryggisbil
+
+    ```
+
+-   Lýsið útkomunni stuttlega
+
+*Sjáum með þessum upplýsingum að meðalfjöldi manns sem skráir sig inn kl 8 er um 350 manns. Einnig höfum við þrjá útlaga, þar sem óvenju margir hafa skráð sig inn, yfir 1300 manns. Sjáum einnig á öryggisbilinu að langflesta daga eru innstimplanir á svipuðu bili, frá 337 til 361 .*
+
+#### Liður 2: Samanburður á fjölda innstiga eftir gerð brautarpalla
+
+Breytan `structure`lýsir því hvort brautarpallur tiltekinnar lestarstöðvar sé upphækkaður (elevated) eða neðanjarðar (subway). 
+
+-   Veljið ykkur eina dagsetningu og búið til minna gagnasafn með eingöngu mælingum frá þessari dagsetningu (en frá öllum lestarstöðvum).
+
+    ```{r}
+    jan30 <- subs %>%
+                  filter(date == '2021-01-30')
+    ```
+
+-   Teiknið graf sem ber saman fjölda innstiga á upphækkuðum brautarpöllum samanborið við neðanjarðarbrautarpalla.
+
+    ```{r message=FALSE, warning=FALSE}
+    ggplot(jan30, aes(x=entries.08+entries.16 )) + geom_histogram(color="purple", binwidth = 30) + facet_grid( Structure ~ .) + labs(x="Innslættir bæði kl 8 og 16", y="Fjöldi", title = "Dreifing innslátta 30 janúar") 
+
+
+
+    ```
+
+-   Reiknið meðalfjölda innstiga klukkan 08 á morgnana fyrir hvora gerð af brautarpalli.
+
+    ```{r}
+    elevated <- jan30 %>% filter(Structure == "Elevated")
+    subway <- jan30 %>% filter(Structure == "Subway")
+
+    mean(subway$entries.08, na.rm= TRUE)
+                    
+    mean(elevated$entries.08, na.rm = TRUE)
+
+    ```
+
+-   Getið þið fullyrt að það sé munur á meðalfjölda innstiga eftir því af hvaða gerð brautarpallurinn er? Framkvæmið viðeigandi tilgátupróf til að kanna það og lýsið útkomunni
+
+    ```{r}
+    t.test(jan30$entries.08~ jan30$Structure)
+    ```
+
+*Sjáum að p-gildið er mjög hátt, þá getum við ályktað að enginn matktækur munur sé á ofanjarðar eða neðanjarðarpöllum. Þetta er svo staðfest með því að skoða öryggisbilið, sem inniheldur 0, sem þýðir að við getum ekki hafnað núlltilgátunni um að meðaltal innstiga sé jafnt.*
+
+#### Liður 3: Samanburður á fjölda innstiga að morgni eða síðdegis
+
+Breytan `entries.16` lýsir fjölda innstiga í tiltekna lest á tiltekinni lestarstöð klukkan 16:00 síðdegis.
+
+-   Veljið ykkur eitthvað eitt hverfi (Neighborhood) og búið til minna gagnasafn með eingöngu mælingum frá þessu hverfi.
+
+    ```{r}
+    eastharlem <- subs %>%
+                  filter(Neighborhood == 'East Harlem')
+    ```
+
+-   Teiknið graf sem ber saman fjölda innstiga klukkan 08 á móti fjölda innstiga klukkan 16 í þessu hverfi.
+
+    ```{r message=FALSE, warning=FALSE}
+
+    hist1 <- ggplot(eastharlem, aes(x=entries.08 )) + geom_histogram(binwidth = 15, fill="blue") +theme_minimal() + labs(x= "Innstök kl 8")
+      
+      
+    hist2 <- ggplot(eastharlem, aes(x=entries.16)) + geom_histogram(binwidth = 15, fill="red") + theme_minimal() + labs(x= "Innstök kl 16")
+
+    library(gridExtra)
+
+    grid.arrange(hist1, hist2, nrow=2)
+
+
+    ```
+
+-   Hvort eru fleiri innstig að morgni eða síðdegis í þessu hverfi? Framkvæmið viðeigandi tilgátupróf til að kanna það og lýsið útkomunni.
+
+```{r}
+wilcox.test(eastharlem$entries.08,eastharlem$entries.16)
+
+sum(eastharlem$entries.08) # Innstig kl 8
+sum(eastharlem$entries.16) # Innstig kl 16
+```
+
+*Sjáum að p-gildið er mjög lágt, sem bendir til þess að það sé lítil fylgni á milli meðaltala kl8 og kl 16. Það þýðir að það er munur á fjölda innstiga á morgnana og síðdeigis. Sjáum svo að mun fleiri taka lestina síðdeigis heldur en á morgnana í East Harlem.*
+
+# Hóp 5
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+library(readr)
+library(multcomp)
+library(ggplot2)
+library(dplyr)
+```
+
+```{r}
+# Lesum inn .csv skjal með upplýsingum um ratings
+movies <- read_csv("Rotten_Tomatoes_Movies.csv", show_col_types = FALSE)
+```
+
+#### Liður 1: Aldurstakmarkanir kvikmynda
+
+Breytan `rating` lýsir hvaða aldurshópum þykir við hæfi að sýna myndina skv. [the Classification and Rating Administration (CARA)](https://atlascinemas.net/ratings.html "Tengill")
+
+-   Skoðið hvaða gildi breytan tekur, sýnist ykkur vera einhverjar innsláttarvillur í gögnunum? Lagið þær ef svo er, annað hvort með því að leiðrétta innsláttarvillurnar eða með því að fjarlægja þær línur úr gagnasafninu.
+
+-   Gefið flokkum breytunnar lýsandi heiti, annað hvort á íslensku eða ensku.
+
+Í töflunni sjáum við að það eru tveir auka flokkar, PG-13) og R) við getum sameinað þessi tvö verkefni. Notum mutate skipanir til að endurnefna flokkana okkar og sleppum þeim sem voru með innsláttavillur, þá þegar að við gerum töflu sjáum við að nýju nöfnin eru komin inn og innsláttavillurnar eru ekki með.
+
+```{r}
+table(movies$rating)
+
+
+```
+
+```{r}
+movies <- movies %>%
+  mutate(rating = case_when(
+    rating == "PG" ~ "Foreldra leiðsögn",
+    rating == "G" ~ "Almennt",
+    rating == "R" ~ "Takmarkað",
+    rating == "NC17" ~ "Bannað innan 17 ára",
+    rating == "NR" ~ "Hefur ekki fengið einkunn",
+    rating == "PG-13" ~ "Bannað innan 13"
+  ))
+table(movies$rating)
+```
+
+-   Teiknið graf sem ber einkunnagjöf kvikmyndanna skv. `tomatometer_rating`saman við aldurstakmörkun þeirra (nýju breytuna sem þið voruð að búa til).
+
+```{r}
+colors1 <- c('red','orange','yellow', 'green', 'lightblue', 'blue', 'purple')
+
+ggplot(data = movies, aes(x = rating, y = tomatometer_rating, fill= rating)) +
+  geom_boxplot() + scale_fill_manual(values= colors1)+
+  labs(x = "Aldurstakmörkun",
+       y = "Tomatometer Einkunn",
+       title = "Einkunnagjöf kvikmyndanna miðað við aldurstakmörkun")+theme(axis.text.x = element_text(angle = 60, vjust = 0.5, hjust=0.5))
+```
+
+-   Næst viljið þið kanna hvort það sé munur á meðaleinkunnagjöf kvikmyndanna eftir því hvaða aldurstakmörkun þær hafa. Hvers konar tilgátupróf framkvæmið þið til að kanna það?
+
+Gott er að nota ANOVA til að bera saman meðaleinkunn fyrir 3+ aldurstakmörkunarhópa. ANOVA athugar hvort að það sé munur á milli hópanna.
+
+```{r}
+anova_nidurs <- aov(tomatometer_rating ~ movies$rating, data = movies)
+summary(anova_nidurs)
+```
+
+Hér sjáum við að p gildin okkar eru mjög lítil Pr(\>F), minni en 0.0001 sem segir okkur að það er mismunur á meðaleinkunnagjöf í mismunandi aldurshópum. Því minna sem p gildið er því meiri líkur er á að það sé til staðar munur á milli hópa.
+
+-   Skrifið nákvæmlega niður hver núlltilgátan ykkar er.
+
+Núlltilgátan í þessu dæmi er að meðaleinkunnagjöf er eins hjá öllum aldurs/rating hópum. Ef p gildið (Pr(\>F)) er minna en 0.05 og því getum við hafnað núlltilgátunni og dregið þá ályktun að það sé munur á milli hópa varðandi meðaleinkunn kvikmynda.
+
+-   Framkvæmið tilgátuprófið í R og túlkið niðurstöðuna. Gætið ykkar að orða mjög nákvæmlega hvaða ályktun má draga af tilgátuprófinu.
+
+Við getum notað ANOVA aftur
+
+```{r}
+anova_nidurs <- aov(tomatometer_rating ~ movies$rating, data = movies)
+summary(anova_nidurs)
+```
+
+Í töflunni sjáum við DF-degrees of freedom fyrir meðaleinkunnagjöf eftir rating og rest sum sq er summa fjölda fyrir meðaleinkunnagjöf eftir rating mean sq er notað til að reikna f value Pr(\>F) p gildið okkar sýnir líkurnar á að sjá hvort að það sé munur á milli hópa. F value er fundið með því að deila sum sq með mean sq til að finna hlutfall á mismuni milli hópa og innan hópa.
+
+Ályktunin byggist á p gildinu okkar, ef p gildið er minna en 0.05 þá getum við hafnað núlltilgátunni og dregið þá ályktun að það sé munur á milli hópanna og þetta gefur til kynna að kvikmyndir fá mismunandi einkunnir eftir aldurshóp.
+
+-   Framkvæmið eftirápróf með skipuninni `Tukey_HSD`og túlkið niðurstöðuna. Gætið ykkar að orða mjög nákvæmlega hvaða ályktun má draga af tilgátuprófunum, þ.e.a.s. takið skýrt fram milli hverja tveggja og tveggja aldurstakmarkanahópa er munur á meðaleinkunnagjöf kvikmyndanna og á milli hverja tveggja og tveggja aldurstakmarkanahópa við getum ekkert ályktað um.
+
+```{r}
+tukey_nidurs <- TukeyHSD(anova_nidurs)
+print(tukey_nidurs)
+```
+
+Marktækur munur á milli hópa:
+
+Bannað innan 13 - Almennt: Meðalmeðalgildi meðaleinkunna milli þessara hópa eru marktækt mismunandi. (p = 0.000)
+
+Bannað innan 17 ára - Bannað innan 13: Meðalmeðalgildi meðaleinkunna milli þessara hópa eru marktækt mismunandi. (p = 0.000)
+
+Foreldra leiðsögn - Bannað innan 13: Meðalmeðalgildi meðaleinkunna milli þessara hópa eru marktækt mismunandi. (p = 0.000)
+
+Hefur ekki fengið einkunn - Bannað innan 13: Meðalmeðalgildi meðaleinkunna milli þessara hópa eru marktækt mismunandi. (p = 0.000)
+
+og fleiri
+
+Enginn marktækur munur á milli hópa:
+
+Bannað innan 17 ára - Almennt: Meðalmeðalgildi meðaleinkunna milli þessara hópa eru ekki marktæk mismunandi (því p er \> 0.05). (p = 0.999)
+
+Foreldra leiðsögn - Bannað innan 17 ára: Meðalmeðalgildi meðaleinkunna milli þessara hópa eru ekki marktæk mismunandi. (p = 0.323)
+
+Hefur ekki fengið einkunn - Bannað innan 17 ára: Meðalmeðalgildi meðaleinkunna milli þessara hópa eru ekki marktæk mismunandi. (p = 0.936)
+
+#### Liður 2: Endurtakið með breytum að eigin vali
+
+-   Endurtakið lið 1 nema með breytum að eigin vali.
+
+-   Það er í góðu að annað hvort talnabreytan eða flokkabreytan sé sú sama og í lið 1, en ekki báðar breyturnar :)
+
+-   Ykkur er frjálst að kóða breyturnar á þá vegu sem ykkur þykir áhugavert og búa þannig til nýja breytur sem þið viljið bera saman. 
+
+-   Ykkur er frjálst að vinna aðeins með hluta gagnasafnins sem inniheldur þann undirhóp kvikmynda sem ykkur finnst áhugaverður.
+
+------------------------------------------------------------------------
+
+-   Skoðið hvaða gildi breytan tekur, sýnist ykkur vera einhverjar innsláttarvillur í gögnunum? Lagið þær ef svo er, annað hvort með því að leiðrétta innsláttarvillurnar eða með því að fjarlægja þær línur úr gagnasafninu. `tomatometer_status`
+
+<!-- -->
+
+-   Gefið flokkum breytunnar lýsandi heiti, annað hvort á íslensku eða ensku.
+
+    ```{r}
+    table(movies$tomatometer_status)
+    ```
+
+    Sjáum hér að breytan hefur 3 flokka, en við ætlum að breyta þeim.
+
+    ```{r}
+    movies <- movies %>%
+      mutate(tomatometer_status = case_when(
+        tomatometer_status == "Rotten" ~ "Slæm mynd ",
+        tomatometer_status == "Fresh" ~ "Góð mynd ",
+        tomatometer_status == "Certified Fresh" ~ "Mjög góð mynd "))
+
+    table(movies$tomatometer_status)
+
+    ```
+
+-   Teiknið graf sem ber einkunnagjöf kvikmyndanna skv. `audience_rating`saman við **tomatometer_status** þeirra
+
+    ```{r warning=FALSE}
+    ggplot(movies, aes(x=tomatometer_status, y= audience_rating, fill= tomatometer_status))+geom_boxplot() + 
+      labs(x = "Tomatometer Staða",
+           y = "Audience Einkunn",
+           title = "Einkunnagjöf áhorfanda miðað við tomatometer status") + scale_fill_manual(values= c('yellow', 'green', 'red'))
+
+    ```
+
+-   Næst viljið þið kanna hvort það sé munur á meðaleinkunnagjöf kvikmyndanna eftir því hvaða **tomatometer_status** þær hafa. Hvers konar tilgátupróf framkvæmið þið til að kanna það?
+
+    *Getum framkvæmt ANOVA próf fyrir meðaltalið og Bartlett-test fyrir dreifnina*
+
+-   Skrifið nákvæmlega niður hver núlltilgátan ykkar er.
+
+    *Núlltilgáta okkar í Bartlett-prófinu er:*
+
+    *H0: Dreifnin á meðaleinkunnagjöf kvikmyndanna er jöfn milli allra hópanna sem skilgreindir eru af tomatometer_status.*
+
+-   Framkvæmið tilgátuprófið í R og túlkið niðurstöðuna. Gætið ykkar að orða mjög nákvæmlega hvaða ályktun má draga af tilgátuprófinu.
+
+    ```{r}
+    bartlett.test(audience_rating ~ tomatometer_status, data=movies )
+    ```
+
+    ```{r}
+    fervik <- aov(audience_rating ~ tomatometer_status, data = movies)
+    anova(fervik)
+    ```
+
+    *Niðurstöður Bartlett-prófsins gefa til kynna að tilvikin hafi ólík dreifni milli hópanna. P-gildið er næstum núll, \< 2.2e-16, sem bendir til þess að við höfum næstum fullkomna ástæðu til að hafna núlltilgátunni um að dreifnin sé sú sama milli hópanna.*
+
+    *Ályktunin sem má draga af þessum niðurstöðum er að dreifnin á meðaleinkunnagjöf kvikmyndanna er ekki jöfn milli hópanna. Þetta bendir til þess að tomatometer_status hefur áhrif á meðaleinkunn kvikmyndanna.*
+
+-   Framkvæmið eftirápróf með skipuninni `Tukey_HSD`og túlkið niðurstöðuna. Gætið ykkar að orða mjög nákvæmlega hvaða ályktun má draga af tilgátuprófunum, þ.e.a.s. takið skýrt fram milli hverja tveggja og tveggja aldurstakmarkanahópa er munur á meðaleinkunnagjöf kvikmyndanna og á milli hverja tveggja og tveggja aldurstakmarkanahópa við getum ekkert ályktað um.
+
+```{r}
+TukeyHSD(fervik)
+```
+
+```{r}
+plot(TukeyHSD(fervik))
+```
+
+Ályktunin sem má draga er:
+
+1.  Munurinn á meðaleinkunnagjöf kvikmynda milli hópa "Mjög góð mynd" og "Góð mynd" er 8.899634, með 95% öryggisstigi milli 8.041935 og 9.757332. P-gildið (p adj) er minna en 0.05, sem þýðir að munurinn er taldur vera marktæktur.
+
+2.  Munurinn á meðaleinkunnagjöf kvikmynda milli hópa "Slæm mynd" og "Góð mynd" er -21.031611 , með 95% öryggisstigi milli -21.696080 og -20.367142. P-gildið er minna en 0.05, sem þýðir að munurinn er taldur vera marktæktur.
+
+3.  Munurinn á meðaleinkunnagjöf kvikmynda milli hópa "Slæm mynd" og "Mjög góð mynd" er -29.931245, með 95% öryggisstigi milli -30.771818 og -29.090672. P-gildið er minna en 0.05, sem þýðir að munurinn er taldur vera marktæktur.
+
+# Ein 4
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+library(readr) 
+library(multcomp) 
+library(ggplot2) 
+library(dplyr)
+library(lubridate)
+```
+
+**Verkefnið**
+
+**a)** Lesið gagnaskrána inn með eftirfarandi skipun:
+
+```{r}
+ajg <- read_csv2("https://www.skra.is/library/Skrar/kaupskra/kaupskra.csv", locale = locale(encoding = "ISO8859-1"))
+
+```
+
+**b)**\
+Notið mutate() fallið til að búa til nýja breytu í gagnarammanum ykkar sem inniheldur fermetraverð eignanna, nefnið breytuna fermetraverd.
+
+```{r}
+# búa til nýja breytu fermetraverd
+ajg <- mutate(ajg, fermetraverd = kaupverd/einflm) 
+```
+
+**c)**\
+Búið til nýja breytu í gagnarammanum ykkar sem inniheldur árið sem eignin var seld, nefnið breytuna ar (t.d. með að nota year() fallið í lubridate pakkanum).
+
+```{r}
+# búa til nýja breytu ar
+ajg <- mutate(ajg, ar = year(utgdag))
+
+```
+
+**d)**\
+Notið filter() skipunina til að velja fullbúnar eignir (sjá fullbuid breytuna), sem seldar voru árið 2022, eru "Fjolbyli" eða "Serbyli" og byggja á  samningum sem eru er nothæfir (sjá nothaefur breytuna). Yfirskrifið stóra gagnaramman með þessum eignum.
+
+Ábending: Þegar velja á línur út frá tveimur eða fleiri gildum á flokkabreytu getur komið sér vel að nota %in% virkjann. Nota mætti kóðann hér að neðan til að velja línur þar sem flokkabreytan *flokkur* í gagnatöflunni *dat* tekur gildin *g1* og *g2:*
+
+nota \<- c("g1", "g2")
+
+dat \<- filter(dat, flokkur%in%nota)
+
+```{r}
+# filtera út Fjölbýli og Sérbýli seld árið 2022, með nothæfan samning og fullbúið innbú
+ajg <- filter(ajg, fullbuid == TRUE & ar == 2022 & tegund %in% c("Fjolbyli", "Serbyli") & onothaefur_samningur == 0)
+
+```
+
+**e)\
+**Veljið ykkur þrjú póstnúmer til að vinna með. Yfirskrifið gagnaramman í d) lið með eignum úr þessum þremur póstnúmerum. Þið skulið nota þennan gagnaramma í verkefninu.
+
+```{r}
+# veljum 3 póstnúmer
+postnumer <- c(201, 112, 800)
+ajg <- filter(ajg, postnr %in% postnumer)
+```
+
+**f)**\
+Teiknið mynd sem sýnir stærð eignanna í rammanum ykkar (það eiga ekki að vera aðrar breytur á myndinni). Eru einhverjir gagnapunktar sem koma í ljós sem mögulega þarf að skoða sérstaklega? Ef svo er skulið þið gera það.
+
+```{r}
+# 3 fermetra lotur 
+ggplot(ajg, aes(x = einflm)) + 
+  geom_histogram(binwidth = 3, fill = "skyblue", color= "black") + labs(x="Stærð eignar í fermetrum", y="Tíðni", title ="Stærð")
+
+# Engir punktar sem þarf að skoða sérstaklega, dreifingin er frekar eðlileg
+
+
+```
+
+**g)**\
+Teiknið mynd sem sýnir kaupverð eignanna í rammanum ykkar (það eiga ekki að vera aðrar breytur á myndinni). Eru einhverjir gagnapunktar sem koma í ljós sem mögulega þarf að skoða sérstaklega? Ef svo er skulið þið gera það.
+
+```{r}
+# Hver milljón / per lota
+ggplot(ajg, aes(x = kaupverd)) + 
+  geom_histogram(binwidth = 1000, fill="lightgreen", color="black") + labs(x="Kaupverð eignar", y="Tíðni", title="Kaupverð")
+
+# Engir punktar sem þarf að skoða sérstaklega, dreifingin er frekar eðlileg
+```
+
+**h)\
+**Teiknið viðeigandi mynd sem sýnir breyturnar fermetraverd og postnr saman á einni mynd.
+
+```{r}
+ajg <- mutate(ajg, postnr = factor(postnr))
+
+ggplot(ajg, aes(x=postnr, y= fermetraverd, fill=postnr)) + geom_boxplot() +
+scale_fill_manual(values=c('lightblue', 'yellow', 'pink')) + 
+labs(x="Póstnúmer", y="Fermetraverð", title = "Fermetraverð eftir Póstnúmerum")
+
+```
+
+**i)\
+**Kannið með viðeigandi tilgátuprófi hvort munur sé á meðalfermetraverði fjölbýla í póstnúmerunum þremur sem þið völduð í lið e). Halda þær forsendur sem þurfa að gilda til að nota aðferðina sem þið beittuð? 
+
+*Ég notaði aov próf, sem er próf á tveim eða fleiri meðaltölum, svo aðferðin uppfyllti þær forsendur sem ég hafði í verkefninu.*
+
+```{r}
+fervik <- aov(ajg$fermetraverd ~ ajg$postnr)
+anova(fervik)
+
+```
+
+*Niðurstaðan úr prófinu segir að það sé marktækur munur á meðaltölum milli sveitafélaga, svo að póstnúmer hefur áhrif á fermetraverð.*
+
+**j)**\
+Teiknið viðeigandi mynd sem sýnir sambandið á milli stærðar og söluverðs eigna í póstnúmerunum. 
+
+```{r}
+ggplot(ajg, aes(x = kaupverd, y = einflm)) + geom_point(color="cyan") +facet_grid( postnr ~.) +
+  labs(x="Söluverð", y= "Fermetrar húsar", title="Samband stærðar og söluverðs milli póstnúmera")
+  
+```
+
+**k)\
+**Smíðið línulegt líkan sem lýsir sambandinu á milli stærðar og kaupverðs eigna í póstnúmerunum.
+
+```{r}
+
+linear_model <- lm(kaupverd ~ einflm, data = ajg)
+
+```
+
+**l)**\
+Skoðið leifar líkansins í lið k) til að meta hvort forsendur líkansins halda.
+
+```{r}
+ggplot(linear_model, aes(sample= .resid)) + stat_qq(color="purple")
+# forsendur líkansis halda
+
+```
