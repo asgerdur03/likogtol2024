@@ -3,21 +3,19 @@ title: "Glósur fyrir lokapróf"
 output: html_notebook
 ---
 
-## Basic R shit
+## Grunnur fyrir verkefni
 
-lesa in library
+#### Lesa in library
+
 ```{r}
-library(tidyverse)
-library(knitr)
-
+library(tidyverse) # notum alltaf
+library(knitr) # fyrir töflur
+library(ggplot2) # gröf
+library(dplyr) # filter
 
 ```
 
-
-
-https://ahj.hi.is/NYC_subway_traffic.csv
-
-Lesa inn mögulegar skrár
+#### Lesa inn mögulegar skrár
 
 ```{r}
 # csv er fyrir 0.0, csv2 er fyrir 0,0
@@ -27,8 +25,165 @@ tomatoes <- read_csv("https://ahj.hi.is/Rotten_Tomatoes_Movies.csv")
 
 kaupskra <- read_csv2("https://ahj.hi.is/kaupskra.csv", locale = locale(encoding = "ISO8859-1"))
 
-nyc <- read_csv("https://ahj.hi.is/NYC_subway_traffic.csv
-")
+nyc <- read_csv("https://ahj.hi.is/NYC_subway_traffic.csv")
 ```
 
+#### Skoða innlesnar skrár
 
+```{r}
+names(tomatoes) # nöfn dálka
+head(tomatoes) # fyrstu 6 línur gagnatöflu
+str(tomatoes) # datatype allra breyta
+length(tomatoes) # dálkar
+length(tomatoes$genre) # fj í dálk
+dim(tomatoes) # stærð töflu RxD
+```
+
+#### Síun gagna
+
+```{r}
+na.omit(poll) # fjarlægir línur sem innihalda NA
+
+data[row < 5, col] # hægt að nota sem filter, með því að setja condition á annað eða bæði
+
+slice(data, 1:10) # velur línur 1-10 úr data
+
+filter(data, condition, condition, ....) 
+
+```
+
+#### Kóðun breyta
+
+```{r}
+data <- mutate(data, breyta = factor(breyta)) # breyta í flokkabreytu
+
+levels(data$colum) <- c("type", .... ) # breytir flokkum
+# til þess að sameina flokka, nota levels, og skýra 2 flokka það sama. 
+
+cut(data$col, c(values, ..), right = F) # skiptir talnabreytu upp í talnabil, not including right
+
+rename(data, newname = oldname) # rename colums
+
+```
+
+## Myndræn framsetting
+
+```{r}
+ggplot(data = data, aes(x= colum, ...)) # grunnurinn af gröfum
+
+geom_bar() # Stöplarit
+geom_plot() # punktarit
+geom_histogram() # Stuðlarit
+geom_boxplot() # Kassarit
+stat_qq() # Normaldreifingarrit
+
+xlab('name') 
+ylab('name') # nöfn ásana
+
+scale_x_continuous(breaks = seq(10, 100, 5)) # x er samfelld, talnalínan sýnir gildi frá 10 til 100 með 10 bila millibili
+scale_x_discrete(labels = c('ehv',..)) # x er strjál
+
+xlim(min, max)
+ylim(min,max) # stillir kvarða
+
+# Litir
+aes(x=.. , color = breyta) # litar mismunandi flokka í sitthvorum litnum, punktarit
+aes(x=.. , fill = breyta) # litar hverja súlu eftir flokkum, stöplarit
+aes(x=.. , shape = breyta) # mismunandi form í punktariti
+
+facet_grid(x ~ y) # x = row, y = colum, til að skipta niðurstöðum grafs upp eftir "?" einhverjum öðrum flokki
+
+theme_classic() #bara flottara
+```
+
+## Tölfræði grunnur
+
+#### Talnabreytur
+
+```{r}
+# nota na.rm = T aftast
+max(data) 
+min(data)
+mean(data)
+median(data)
+var(data) # dreifni, variability
+sd(data) # staðalfrávik
+quantile(data) # fjórðungsmörk
+
+
+cor(data1, data2, use="complete.obs")
+
+```
+
+#### Flokkabreytur
+
+```{r}
+table(data$col) # telur hversu oft hver flokkur kemur fyrir
+
+table(data$col1, data$col2) # samsetningar
+
+prop.table(table(data$col)) # skilar hlutföllum
+# með margin = 1, skoðum við hlutföll eftir línum, 2 eftir dálkum
+```
+
+#### Annað gagnlegt
+
+```{r}
+summary(data)
+# Talnabreyta: min, 1Q, median, mean, 3Q, max
+# Flokkabreyta: sömu upl, nema fyrir hverja og eina breytu í töflunni
+
+tapply(data$col1, data$col2, aðferð_talnabreyta, na.rm= TRUE)
+# apply ákveðna aðferð á talnabreytu eftir flokkum
+```
+
+## Líkindafræði grunnur
+
+#### Reikniaðgerðir
+
+```{r}
+factorial(x) # skilar factorial af x
+choose(n,k) # skilar tvíliðustuðli af (n k)
+
+```
+
+#### Strjálar líkindadreifingar
+
+```{r}
+# Tvíkostadreifing
+
+dbinom(k1:k2,n,p) # Skilar líkum frá k1 til k2, í n tilraunum með líkur p. 
+
+pbinom(k,n,p) # skilar líkum á að fá <= k með n tilraunum með líkur p. 
+
+# Poisson dreifing
+
+dpois(k,lambda) # c(x,x,x...) í staðin fyrir k, með væntigildi lambda
+ppois(k,lambda)
+# sambærilegt og d,p í binom
+
+```
+
+#### Samfelldar líkindadreifingar
+
+```{r}
+# normaldreifing
+# sjálfgefið mean = 0 og sd = 1
+pnorm(x, mean, sd) # x = viðmiðunargildi, líkurnar á að slembistærð með meðaltal mean, og sd taki gildi sem er minna en x.
+qnorm(a,m,sd) # skilar gildi í a percentile, viðmiðunargildi
+rnorm(n, mean, sd) # býr til n mörg gildi, með meðaltal og staðalfrávik
+
+```
+
+## Ályktunartölfræði
+
+#### Annað
+
+```{r}
+sample(data, num) # skilar num mörgum úr data
+# replace = T leyfir okkur að velja duplicates
+
+replicate(n, sample(data$col, m, replace =T)) # endurtekur skipun n sinnum, með úrtak m
+```
+
+#### Flokkabreytur

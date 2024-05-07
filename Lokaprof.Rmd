@@ -1,0 +1,46 @@
+---
+title: "Lokapróf"
+author: "Ásgerður Júlía Gunnarsdóttir, ajg20@hi.is"
+output: 
+  prettydoc::html_pretty:
+    theme: cayman
+    highlight: github
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Import libraries
+
+```{r echo=T, message=F, warning=FALSE}
+library(knitr)
+library(tidyverse)
+library(ggplot2) # gröfnames()
+```
+
+Read files
+
+```{r}
+# muna að eyða þeim sem við notum ekki
+
+poll <- read.table("https://ahj.hi.is/spurningar_um_lifid_24.csv", sep = ";", header = T, dec = ",")
+
+tomatoes <- read_csv("https://ahj.hi.is/Rotten_Tomatoes_Movies.csv")
+
+kaupskra <- read_csv2("https://ahj.hi.is/kaupskra.csv", locale = locale(encoding = "ISO8859-1"))
+
+nyc <- read_csv("https://ahj.hi.is/NYC_subway_traffic.csv")
+```
+
+# Liður 1 (25)
+
+# Liður 2 (25)
+
+# Liður 3 (25)
+
+# Liður 4 (25)
+
+# Liður 5 (25)
+
+### Muna að skila inn bæði á Inspera og Canvas  hólf (.html skjali) 

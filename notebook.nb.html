@@ -1752,76 +1752,251 @@ display: none;
 
 
 <!-- rnb-text-begin -->
-<div id="basic-r-shit" class="section level2">
-<h2>Basic R shit</h2>
-<p>lesa in library</p>
+<div id="grunnur-fyrir-verkefni" class="section level2">
+<h2>Grunnur fyrir verkefni</h2>
+<div id="lesa-in-library" class="section level4">
+<h4>Lesa in library</h4>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeSh0aWR5dmVyc2UpXG5saWJyYXJ5KGtuaXRyKVxuXG5cbmBgYCJ9 -->
-<pre class="r"><code>library(tidyverse)
-library(knitr)
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeSh0aWR5dmVyc2UpICMgbm90dW0gYWxsdGFmXG5saWJyYXJ5KGtuaXRyKSAjIGZ5cmlyIHTDtmZsdXJcbmxpYnJhcnkoZ2dwbG90MikgIyBncsO2ZlxubGlicmFyeShkcGx5cikgIyBmaWx0ZXJcblxuYGBgIn0= -->
+<pre class="r"><code>library(tidyverse) # notum alltaf
+library(knitr) # fyrir töflur
+library(ggplot2) # gröf
+library(dplyr) # filter
 </code></pre>
 <!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
-<p><a href="https://ahj.hi.is/NYC_subway_traffic.csv" class="uri">https://ahj.hi.is/NYC_subway_traffic.csv</a></p>
-<p>Lesa inn mögulegar skrár</p>
+</div>
+<div id="lesa-inn-mögulegar-skrár" class="section level4">
+<h4>Lesa inn mögulegar skrár</h4>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuIyBjc3YgZXIgZnlyaXIgMC4wLCBjc3YyIGVyIGZ5cmlyIDAsMFxucG9sbCA8LSByZWFkLnRhYmxlKFwiaHR0cHM6Ly9haGouaGkuaXMvc3B1cm5pbmdhcl91bV9saWZpZF8yNC5jc3ZcIiwgc2VwID0gXCI7XCIsIGhlYWRlciA9IFQsIGRlYyA9IFwiLFwiKVxuXG50b21hdG9lcyA8LSByZWFkX2NzdihcImh0dHBzOi8vYWhqLmhpLmlzL1JvdHRlbl9Ub21hdG9lc19Nb3ZpZXMuY3N2XCIpXG5gYGAifQ== -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuIyBjc3YgZXIgZnlyaXIgMC4wLCBjc3YyIGVyIGZ5cmlyIDAsMFxucG9sbCA8LSByZWFkLnRhYmxlKFwiaHR0cHM6Ly9haGouaGkuaXMvc3B1cm5pbmdhcl91bV9saWZpZF8yNC5jc3ZcIiwgc2VwID0gXCI7XCIsIGhlYWRlciA9IFQsIGRlYyA9IFwiLFwiKVxuXG50b21hdG9lcyA8LSByZWFkX2NzdihcImh0dHBzOi8vYWhqLmhpLmlzL1JvdHRlbl9Ub21hdG9lc19Nb3ZpZXMuY3N2XCIpXG5cbmthdXBza3JhIDwtIHJlYWRfY3N2MihcImh0dHBzOi8vYWhqLmhpLmlzL2thdXBza3JhLmNzdlwiLCBsb2NhbGUgPSBsb2NhbGUoZW5jb2RpbmcgPSBcIklTTzg4NTktMVwiKSlcblxubnljIDwtIHJlYWRfY3N2KFwiaHR0cHM6Ly9haGouaGkuaXMvTllDX3N1YndheV90cmFmZmljLmNzdlwiKVxuYGBgIn0= -->
 <pre class="r"><code># csv er fyrir 0.0, csv2 er fyrir 0,0
 poll &lt;- read.table(&quot;https://ahj.hi.is/spurningar_um_lifid_24.csv&quot;, sep = &quot;;&quot;, header = T, dec = &quot;,&quot;)
 
-tomatoes &lt;- read_csv(&quot;https://ahj.hi.is/Rotten_Tomatoes_Movies.csv&quot;)</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiUm93czogMTY2MzggQ29sdW1uczogMTdcbuKUgOKUgCBDb2x1bW4gc3BlY2lmaWNhdGlvbiDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIBcbkRlbGltaXRlcjogXCIsXCJcbmNociAgKDEwKTogbW92aWVfdGl0bGUsIG1vdmllX2luZm8sIGNyaXRpY3NfY29uc2Vuc3UuLi5cbmRibCAgICg1KTogcnVudGltZV9pbl9taW51dGVzLCB0b21hdG9tZXRlcl9yYXRpbmcsIHQuLi5cbmRhdGUgICgyKTogaW5fdGhlYXRlcnNfZGF0ZSwgb25fc3RyZWFtaW5nX2RhdGVcblxu4oS5IFVzZSBgc3BlYygpYCB0byByZXRyaWV2ZSB0aGUgZnVsbCBjb2x1bW4gc3BlY2lmaWNhdGlvbiBmb3IgdGhpcyBkYXRhLlxu4oS5IFNwZWNpZnkgdGhlIGNvbHVtbiB0eXBlcyBvciBzZXQgYHNob3dfY29sX3R5cGVzID0gRkFMU0VgIHRvIHF1aWV0IHRoaXMgbWVzc2FnZS5cbiJ9 -->
-<pre><code>Rows: 16638 Columns: 17
-── Column specification ────────────────────────────────
-Delimiter: &quot;,&quot;
-chr  (10): movie_title, movie_info, critics_consensu...
-dbl   (5): runtime_in_minutes, tomatometer_rating, t...
-date  (2): in_theaters_date, on_streaming_date
+tomatoes &lt;- read_csv(&quot;https://ahj.hi.is/Rotten_Tomatoes_Movies.csv&quot;)
 
-ℹ Use `spec()` to retrieve the full column specification for this data.
-ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxua2F1cHNrcmEgPC0gcmVhZF9jc3YyKFwiaHR0cHM6Ly9haGouaGkuaXMva2F1cHNrcmEuY3N2XCIsIGxvY2FsZSA9IGxvY2FsZShlbmNvZGluZyA9IFwiSVNPODg1OS0xXCIpKVxuYGBgIn0= -->
-<pre class="r"><code>kaupskra &lt;- read_csv2(&quot;https://ahj.hi.is/kaupskra.csv&quot;, locale = locale(encoding = &quot;ISO8859-1&quot;))</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoi4oS5IFVzaW5nIFwiJywnXCIgYXMgZGVjaW1hbCBhbmQgXCInLidcIiBhcyBncm91cGluZyBtYXJrLiBVc2UgYHJlYWRfZGVsaW0oKWAgZm9yIG1vcmUgY29udHJvbC5cbk5ldyBuYW1lczpcbuKAoiBgYCAtPiBgLi4uMjJgXG5Sb3dzOiAxNjk2MzYgQ29sdW1uczogMjJcbuKUgOKUgCBDb2x1bW4gc3BlY2lmaWNhdGlvbiDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIBcbkRlbGltaXRlcjogXCI7XCJcbmNociAgICg3KTogc2tqYWxhbnVtZXIsIGhlaW1saWxpc2ZhbmcsIHN2Zm4sIHN2ZWl0YXIuLi5cbmRibCAgKDEyKTogZmFlcnNsdW51bWVyLCBlbW5yLCBmYXN0bnVtLCBwb3N0bnIsIGhlaW4uLi5cbmxnbCAgICgxKTogLi4uMjJcbmR0dG0gICgyKTogdXRnZGFnLCB0aGluZ2x5c3RkYWdzXG5cbuKEuSBVc2UgYHNwZWMoKWAgdG8gcmV0cmlldmUgdGhlIGZ1bGwgY29sdW1uIHNwZWNpZmljYXRpb24gZm9yIHRoaXMgZGF0YS5cbuKEuSBTcGVjaWZ5IHRoZSBjb2x1bW4gdHlwZXMgb3Igc2V0IGBzaG93X2NvbF90eXBlcyA9IEZBTFNFYCB0byBxdWlldCB0aGlzIG1lc3NhZ2UuXG4ifQ== -->
-<pre><code>ℹ Using &quot;&#39;,&#39;&quot; as decimal and &quot;&#39;.&#39;&quot; as grouping mark. Use `read_delim()` for more control.
-New names:
-• `` -&gt; `...22`
-Rows: 169636 Columns: 22
-── Column specification ────────────────────────────────
-Delimiter: &quot;;&quot;
-chr   (7): skjalanumer, heimlilisfang, svfn, sveitar...
-dbl  (12): faerslunumer, emnr, fastnum, postnr, hein...
-lgl   (1): ...22
-dttm  (2): utgdag, thinglystdags
+kaupskra &lt;- read_csv2(&quot;https://ahj.hi.is/kaupskra.csv&quot;, locale = locale(encoding = &quot;ISO8859-1&quot;))
 
-ℹ Use `spec()` to retrieve the full column specification for this data.
-ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubnljIDwtIHJlYWRfY3N2KFwiaHR0cHM6Ly9haGouaGkuaXMvTllDX3N1YndheV90cmFmZmljLmNzdlxuXCIpXG5gYGAifQ== -->
-<pre class="r"><code>nyc &lt;- read_csv(&quot;https://ahj.hi.is/NYC_subway_traffic.csv
-&quot;)</code></pre>
+nyc &lt;- read_csv(&quot;https://ahj.hi.is/NYC_subway_traffic.csv&quot;)</code></pre>
 <!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiUm93czogMCBDb2x1bW5zOiAxXG7ilIDilIAgQ29sdW1uIHNwZWNpZmljYXRpb24g4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSAXG5EZWxpbWl0ZXI6IFwiLFwiXG5jaHIgKDEpOiBodHRwczovL2Foai5oaS5pcy9OWUNfc3Vid2F5X3RyYWZmaWMuY3N2XG5cbuKEuSBVc2UgYHNwZWMoKWAgdG8gcmV0cmlldmUgdGhlIGZ1bGwgY29sdW1uIHNwZWNpZmljYXRpb24gZm9yIHRoaXMgZGF0YS5cbuKEuSBTcGVjaWZ5IHRoZSBjb2x1bW4gdHlwZXMgb3Igc2V0IGBzaG93X2NvbF90eXBlcyA9IEZBTFNFYCB0byBxdWlldCB0aGlzIG1lc3NhZ2UuXG4ifQ== -->
-<pre><code>Rows: 0 Columns: 1
-── Column specification ────────────────────────────────
-Delimiter: &quot;,&quot;
-chr (1): https://ahj.hi.is/NYC_subway_traffic.csv
-
-ℹ Use `spec()` to retrieve the full column specification for this data.
-ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
-<!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
+</div>
+<div id="skoða-innlesnar-skrár" class="section level4">
+<h4>Skoða innlesnar skrár</h4>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubmFtZXModG9tYXRvZXMpICMgbsO2Zm4gZMOhbGthXG5oZWFkKHRvbWF0b2VzKSAjIGZ5cnN0dSA2IGzDrW51ciBnYWduYXTDtmZsdVxuc3RyKHRvbWF0b2VzKSAjIGRhdGF0eXBlIGFsbHJhIGJyZXl0YVxubGVuZ3RoKHRvbWF0b2VzKSAjIGTDoWxrYXJcbmxlbmd0aCh0b21hdG9lcyRnZW5yZSkgIyBmaiDDrSBkw6Fsa1xuZGltKHRvbWF0b2VzKSAjIHN0w6Zyw7AgdMO2Zmx1IFJ4RFxuYGBgIn0= -->
+<pre class="r"><code>names(tomatoes) # nöfn dálka
+head(tomatoes) # fyrstu 6 línur gagnatöflu
+str(tomatoes) # datatype allra breyta
+length(tomatoes) # dálkar
+length(tomatoes$genre) # fj í dálk
+dim(tomatoes) # stærð töflu RxD</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+</div>
+<div id="síun-gagna" class="section level4">
+<h4>Síun gagna</h4>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubmEub21pdChwb2xsKSAjIGZqYXJsw6ZnaXIgbMOtbnVyIHNlbSBpbm5paGFsZGEgTkFcblxuZGF0YVtyb3cgPCA1LCBjb2xdICMgaMOmZ3QgYcOwIG5vdGEgc2VtIGZpbHRlciwgbWXDsCDDvnbDrSBhw7Agc2V0amEgY29uZGl0aW9uIMOhIGFubmHDsCBlw7BhIGLDpsOwaVxuXG5zbGljZShkYXRhLCAxOjEwKSAjIHZlbHVyIGzDrW51ciAxLTEwIMO6ciBkYXRhXG5cbmZpbHRlcihkYXRhLCBjb25kaXRpb24sIGNvbmRpdGlvbiwgLi4uLikgXG5cbmBgYCJ9 -->
+<pre class="r"><code>na.omit(poll) # fjarlægir línur sem innihalda NA
+
+data[row &lt; 5, col] # hægt að nota sem filter, með því að setja condition á annað eða bæði
+
+slice(data, 1:10) # velur línur 1-10 úr data
+
+filter(data, condition, condition, ....) 
+</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+</div>
+<div id="kóðun-breyta" class="section level4">
+<h4>Kóðun breyta</h4>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZGF0YSA8LSBtdXRhdGUoZGF0YSwgYnJleXRhID0gZmFjdG9yKGJyZXl0YSkpICMgYnJleXRhIMOtIGZsb2trYWJyZXl0dVxuXG5sZXZlbHMoZGF0YSRjb2x1bSkgPC0gYyhcInR5cGVcIiwgLi4uLiApICMgYnJleXRpciBmbG9ra3VtXG4jIHRpbCDDvmVzcyBhw7Agc2FtZWluYSBmbG9ra2EsIG5vdGEgbGV2ZWxzLCBvZyBza8O9cmEgMiBmbG9ra2Egw75hw7Agc2FtYS4gXG5cbmN1dChkYXRhJGNvbCwgYyh2YWx1ZXMsIC4uKSwgcmlnaHQgPSBGKSAjIHNraXB0aXIgdGFsbmFicmV5dHUgdXBwIMOtIHRhbG5hYmlsLCBub3QgaW5jbHVkaW5nIHJpZ2h0XG5cbnJlbmFtZShkYXRhLCBuZXduYW1lID0gb2xkbmFtZSkgIyByZW5hbWUgY29sdW1zXG5cbmBgYCJ9 -->
+<pre class="r"><code>data &lt;- mutate(data, breyta = factor(breyta)) # breyta í flokkabreytu
+
+levels(data$colum) &lt;- c(&quot;type&quot;, .... ) # breytir flokkum
+# til þess að sameina flokka, nota levels, og skýra 2 flokka það sama. 
+
+cut(data$col, c(values, ..), right = F) # skiptir talnabreytu upp í talnabil, not including right
+
+rename(data, newname = oldname) # rename colums
+</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+</div>
+</div>
+<div id="myndræn-framsetting" class="section level2">
+<h2>Myndræn framsetting</h2>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZ2dwbG90KGRhdGEgPSBkYXRhLCBhZXMoeD0gY29sdW0sIC4uLikpICMgZ3J1bm51cmlubiBhZiBncsO2ZnVtXG5cbmdlb21fYmFyKCkgIyBTdMO2cGxhcml0XG5nZW9tX3Bsb3QoKSAjIHB1bmt0YXJpdFxuZ2VvbV9oaXN0b2dyYW0oKSAjIFN0dcOwbGFyaXRcbmdlb21fYm94cGxvdCgpICMgS2Fzc2FyaXRcbnN0YXRfcXEoKSAjIE5vcm1hbGRyZWlmaW5nYXJyaXRcblxueGxhYignbmFtZScpIFxueWxhYignbmFtZScpICMgbsO2Zm4gw6FzYW5hXG5cbnNjYWxlX3hfY29udGludW91cyhicmVha3MgPSBzZXEoMTAsIDEwMCwgNSkpICMgeCBlciBzYW1mZWxsZCwgdGFsbmFsw61uYW4gc8O9bmlyIGdpbGRpIGZyw6EgMTAgdGlsIDEwMCBtZcOwIDEwIGJpbGEgbWlsbGliaWxpXG5zY2FsZV94X2Rpc2NyZXRlKGxhYmVscyA9IGMoJ2VodicsLi4pKSAjIHggZXIgc3RyasOhbFxuXG54bGltKG1pbiwgbWF4KVxueWxpbShtaW4sbWF4KSAjIHN0aWxsaXIga3ZhcsOwYVxuXG4jIExpdGlyXG5hZXMoeD0uLiAsIGNvbG9yID0gYnJleXRhKSAjIGxpdGFyIG1pc211bmFuZGkgZmxva2thIMOtIHNpdHRodm9ydW0gbGl0bnVtLCBwdW5rdGFyaXRcbmFlcyh4PS4uICwgZmlsbCA9IGJyZXl0YSkgIyBsaXRhciBodmVyamEgc8O6bHUgZWZ0aXIgZmxva2t1bSwgc3TDtnBsYXJpdFxuYWVzKHg9Li4gLCBzaGFwZSA9IGJyZXl0YSkgIyBtaXNtdW5hbmRpIGZvcm0gw60gcHVua3Rhcml0aVxuXG5mYWNldF9ncmlkKHggfiB5KSAjIHggPSByb3csIHkgPSBjb2x1bSwgdGlsIGHDsCBza2lwdGEgbmnDsHVyc3TDtsOwdW0gZ3JhZnMgdXBwIGVmdGlyIFwiP1wiIGVpbmh2ZXJqdW0gw7bDsHJ1bSBmbG9ra2lcblxudGhlbWVfY2xhc3NpYygpICNiYXJhIGZsb3R0YXJhXG5gYGAifQ== -->
+<pre class="r"><code>ggplot(data = data, aes(x= colum, ...)) # grunnurinn af gröfum
+
+geom_bar() # Stöplarit
+geom_plot() # punktarit
+geom_histogram() # Stuðlarit
+geom_boxplot() # Kassarit
+stat_qq() # Normaldreifingarrit
+
+xlab(&#39;name&#39;) 
+ylab(&#39;name&#39;) # nöfn ásana
+
+scale_x_continuous(breaks = seq(10, 100, 5)) # x er samfelld, talnalínan sýnir gildi frá 10 til 100 með 10 bila millibili
+scale_x_discrete(labels = c(&#39;ehv&#39;,..)) # x er strjál
+
+xlim(min, max)
+ylim(min,max) # stillir kvarða
+
+# Litir
+aes(x=.. , color = breyta) # litar mismunandi flokka í sitthvorum litnum, punktarit
+aes(x=.. , fill = breyta) # litar hverja súlu eftir flokkum, stöplarit
+aes(x=.. , shape = breyta) # mismunandi form í punktariti
+
+facet_grid(x ~ y) # x = row, y = colum, til að skipta niðurstöðum grafs upp eftir &quot;?&quot; einhverjum öðrum flokki
+
+theme_classic() #bara flottara</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+</div>
+<div id="tölfræði-grunnur" class="section level2">
+<h2>Tölfræði grunnur</h2>
+<div id="talnabreytur" class="section level4">
+<h4>Talnabreytur</h4>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuIyBub3RhIG5hLnJtID0gVCBhZnRhc3Rcbm1heChkYXRhKSBcbm1pbihkYXRhKVxubWVhbihkYXRhKVxubWVkaWFuKGRhdGEpXG52YXIoZGF0YSkgIyBkcmVpZm5pLCB2YXJpYWJpbGl0eVxuc2QoZGF0YSkgIyBzdGHDsGFsZnLDoXZpa1xucXVhbnRpbGUoZGF0YSkgIyBmasOzcsOwdW5nc23DtnJrXG5cblxuY29yKGRhdGExLCBkYXRhMiwgdXNlPVwiY29tcGxldGUub2JzXCIpXG5cbmBgYCJ9 -->
+<pre class="r"><code># nota na.rm = T aftast
+max(data) 
+min(data)
+mean(data)
+median(data)
+var(data) # dreifni, variability
+sd(data) # staðalfrávik
+quantile(data) # fjórðungsmörk
+
+
+cor(data1, data2, use=&quot;complete.obs&quot;)
+</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+</div>
+<div id="flokkabreytur" class="section level4">
+<h4>Flokkabreytur</h4>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxudGFibGUoZGF0YSRjb2wpICMgdGVsdXIgaHZlcnN1IG9mdCBodmVyIGZsb2trdXIga2VtdXIgZnlyaXJcblxudGFibGUoZGF0YSRjb2wxLCBkYXRhJGNvbDIpICMgc2Ftc2V0bmluZ2FyXG5cbnByb3AudGFibGUodGFibGUoZGF0YSRjb2wpKSAjIHNraWxhciBobHV0ZsO2bGx1bVxuIyBtZcOwIG1hcmdpbiA9IDEsIHNrb8OwdW0gdmnDsCBobHV0ZsO2bGwgZWZ0aXIgbMOtbnVtLCAyIGVmdGlyIGTDoWxrdW1cbmBgYCJ9 -->
+<pre class="r"><code>table(data$col) # telur hversu oft hver flokkur kemur fyrir
+
+table(data$col1, data$col2) # samsetningar
+
+prop.table(table(data$col)) # skilar hlutföllum
+# með margin = 1, skoðum við hlutföll eftir línum, 2 eftir dálkum</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+</div>
+<div id="annað-gagnlegt" class="section level4">
+<h4>Annað gagnlegt</h4>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuc3VtbWFyeShkYXRhKVxuIyBUYWxuYWJyZXl0YTogbWluLCAxUSwgbWVkaWFuLCBtZWFuLCAzUSwgbWF4XG4jIEZsb2trYWJyZXl0YTogc8O2bXUgdXBsLCBuZW1hIGZ5cmlyIGh2ZXJqYSBvZyBlaW5hIGJyZXl0dSDDrSB0w7ZmbHVubmlcblxudGFwcGx5KGRhdGEkY29sMSwgZGF0YSRjb2wyLCBhw7BmZXLDsF90YWxuYWJyZXl0YSwgbmEucm09IFRSVUUpXG4jIGFwcGx5IMOha3Zlw7BuYSBhw7BmZXLDsCDDoSB0YWxuYWJyZXl0dSBlZnRpciBmbG9ra3VtXG5gYGAifQ== -->
+<pre class="r"><code>summary(data)
+# Talnabreyta: min, 1Q, median, mean, 3Q, max
+# Flokkabreyta: sömu upl, nema fyrir hverja og eina breytu í töflunni
+
+tapply(data$col1, data$col2, aðferð_talnabreyta, na.rm= TRUE)
+# apply ákveðna aðferð á talnabreytu eftir flokkum</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+</div>
+</div>
+<div id="líkindafræði-grunnur" class="section level2">
+<h2>Líkindafræði grunnur</h2>
+<div id="reikniaðgerðir" class="section level4">
+<h4>Reikniaðgerðir</h4>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZmFjdG9yaWFsKHgpICMgc2tpbGFyIGZhY3RvcmlhbCBhZiB4XG5jaG9vc2UobixrKSAjIHNraWxhciB0dsOtbGnDsHVzdHXDsGxpIGFmIChuIGspXG5cbmBgYCJ9 -->
+<pre class="r"><code>factorial(x) # skilar factorial af x
+choose(n,k) # skilar tvíliðustuðli af (n k)
+</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+</div>
+<div id="strjálar-líkindadreifingar" class="section level4">
+<h4>Strjálar líkindadreifingar</h4>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuIyBUdsOta29zdGFkcmVpZmluZ1xuXG5kYmlub20oazE6azIsbixwKSAjIFNraWxhciBsw61rdW0gZnLDoSBrMSB0aWwgazIsIMOtIG4gdGlscmF1bnVtIG1lw7AgbMOta3VyIHAuIFxuXG5wYmlub20oayxuLHApICMgc2tpbGFyIGzDrWt1bSDDoSBhw7AgZsOhIDw9IGsgbWXDsCBuIHRpbHJhdW51bSBtZcOwIGzDrWt1ciBwLiBcblxuIyBQb2lzc29uIGRyZWlmaW5nXG5cbmRwb2lzKGssbGFtYmRhKSAjIGMoeCx4LHguLi4pIMOtIHN0YcOwaW4gZnlyaXIgaywgbWXDsCB2w6ZudGlnaWxkaSBsYW1iZGFcbnBwb2lzKGssbGFtYmRhKVxuIyBzYW1iw6ZyaWxlZ3Qgb2cgZCxwIMOtIGJpbm9tXG5cbmBgYCJ9 -->
+<pre class="r"><code># Tvíkostadreifing
+
+dbinom(k1:k2,n,p) # Skilar líkum frá k1 til k2, í n tilraunum með líkur p. 
+
+pbinom(k,n,p) # skilar líkum á að fá &lt;= k með n tilraunum með líkur p. 
+
+# Poisson dreifing
+
+dpois(k,lambda) # c(x,x,x...) í staðin fyrir k, með væntigildi lambda
+ppois(k,lambda)
+# sambærilegt og d,p í binom
+</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+</div>
+<div id="samfelldar-líkindadreifingar" class="section level4">
+<h4>Samfelldar líkindadreifingar</h4>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuIyBub3JtYWxkcmVpZmluZ1xuIyBzasOhbGZnZWZpw7AgbWVhbiA9IDAgb2cgc2QgPSAxXG5wbm9ybSh4LCBtZWFuLCBzZCkgIyB4ID0gdmnDsG1pw7B1bmFyZ2lsZGksIGzDrWt1cm5hciDDoSBhw7Agc2xlbWJpc3TDpnLDsCBtZcOwIG1lw7BhbHRhbCBtZWFuLCBvZyBzZCB0YWtpIGdpbGRpIHNlbSBlciBtaW5uYSBlbiB4LlxucW5vcm0oYSxtLHNkKSAjIHNraWxhciBnaWxkaSDDrSBhIHBlcmNlbnRpbGUsIHZpw7BtacOwdW5hcmdpbGRpXG5ybm9ybShuLCBtZWFuLCBzZCkgIyBiw71yIHRpbCBuIG3DtnJnIGdpbGRpLCBtZcOwIG1lw7BhbHRhbCBvZyBzdGHDsGFsZnLDoXZpa1xuXG5gYGAifQ== -->
+<pre class="r"><code># normaldreifing
+# sjálfgefið mean = 0 og sd = 1
+pnorm(x, mean, sd) # x = viðmiðunargildi, líkurnar á að slembistærð með meðaltal mean, og sd taki gildi sem er minna en x.
+qnorm(a,m,sd) # skilar gildi í a percentile, viðmiðunargildi
+rnorm(n, mean, sd) # býr til n mörg gildi, með meðaltal og staðalfrávik
+</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+</div>
+</div>
+<div id="ályktunartölfræði" class="section level2">
+<h2>Ályktunartölfræði</h2>
+<div id="annað" class="section level4">
+<h4>Annað</h4>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuc2FtcGxlKGRhdGEsIG51bSkgIyBza2lsYXIgbnVtIG3DtnJndW0gw7pyIGRhdGFcbiMgcmVwbGFjZSA9IFQgbGV5ZmlyIG9ra3VyIGHDsCB2ZWxqYSBkdXBsaWNhdGVzXG5cbnJlcGxpY2F0ZShuLCBzYW1wbGUoZGF0YSRjb2wsIG0sIHJlcGxhY2UgPVQpKSAjIGVuZHVydGVrdXIgc2tpcHVuIG4gc2lubnVtLCBtZcOwIMO6cnRhayBtXG5gYGAifQ== -->
+<pre class="r"><code>sample(data, num) # skilar num mörgum úr data
+# replace = T leyfir okkur að velja duplicates
+
+replicate(n, sample(data$col, m, replace =T)) # endurtekur skipun n sinnum, með úrtak m</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+</div>
+<div id="flokkabreytur-1" class="section level4">
+<h4>Flokkabreytur</h4>
 <!-- rnb-text-end -->
 </div>
+</div>
 
-<div id="rmd-source-code">LS0tDQp0aXRsZTogIkdsw7NzdXIgZnlyaXIgbG9rYXByw7NmIg0Kb3V0cHV0OiBodG1sX25vdGVib29rDQotLS0NCg0KIyMgQmFzaWMgUiBzaGl0DQoNCmxlc2EgaW4gbGlicmFyeQ0KYGBge3J9DQpsaWJyYXJ5KHRpZHl2ZXJzZSkNCmxpYnJhcnkoa25pdHIpDQoNCg0KYGBgDQoNCg0KDQpodHRwczovL2Foai5oaS5pcy9OWUNfc3Vid2F5X3RyYWZmaWMuY3N2DQoNCkxlc2EgaW5uIG3Dtmd1bGVnYXIgc2tyw6FyDQoNCmBgYHtyfQ0KIyBjc3YgZXIgZnlyaXIgMC4wLCBjc3YyIGVyIGZ5cmlyIDAsMA0KcG9sbCA8LSByZWFkLnRhYmxlKCJodHRwczovL2Foai5oaS5pcy9zcHVybmluZ2FyX3VtX2xpZmlkXzI0LmNzdiIsIHNlcCA9ICI7IiwgaGVhZGVyID0gVCwgZGVjID0gIiwiKQ0KDQp0b21hdG9lcyA8LSByZWFkX2NzdigiaHR0cHM6Ly9haGouaGkuaXMvUm90dGVuX1RvbWF0b2VzX01vdmllcy5jc3YiKQ0KDQprYXVwc2tyYSA8LSByZWFkX2NzdjIoImh0dHBzOi8vYWhqLmhpLmlzL2thdXBza3JhLmNzdiIsIGxvY2FsZSA9IGxvY2FsZShlbmNvZGluZyA9ICJJU084ODU5LTEiKSkNCg0KbnljIDwtIHJlYWRfY3N2KCJodHRwczovL2Foai5oaS5pcy9OWUNfc3Vid2F5X3RyYWZmaWMuY3N2DQoiKQ0KYGBgDQoNCg0K</div>
+<div id="rmd-source-code">LS0tDQp0aXRsZTogIkdsw7NzdXIgZnlyaXIgbG9rYXByw7NmIg0Kb3V0cHV0OiBodG1sX25vdGVib29rDQotLS0NCg0KIyMgR3J1bm51ciBmeXJpciB2ZXJrZWZuaQ0KDQojIyMjIExlc2EgaW4gbGlicmFyeQ0KDQpgYGB7cn0NCmxpYnJhcnkodGlkeXZlcnNlKSAjIG5vdHVtIGFsbHRhZg0KbGlicmFyeShrbml0cikgIyBmeXJpciB0w7ZmbHVyDQpsaWJyYXJ5KGdncGxvdDIpICMgZ3LDtmYNCmxpYnJhcnkoZHBseXIpICMgZmlsdGVyDQoNCmBgYA0KDQojIyMjIExlc2EgaW5uIG3Dtmd1bGVnYXIgc2tyw6FyDQoNCmBgYHtyfQ0KIyBjc3YgZXIgZnlyaXIgMC4wLCBjc3YyIGVyIGZ5cmlyIDAsMA0KcG9sbCA8LSByZWFkLnRhYmxlKCJodHRwczovL2Foai5oaS5pcy9zcHVybmluZ2FyX3VtX2xpZmlkXzI0LmNzdiIsIHNlcCA9ICI7IiwgaGVhZGVyID0gVCwgZGVjID0gIiwiKQ0KDQp0b21hdG9lcyA8LSByZWFkX2NzdigiaHR0cHM6Ly9haGouaGkuaXMvUm90dGVuX1RvbWF0b2VzX01vdmllcy5jc3YiKQ0KDQprYXVwc2tyYSA8LSByZWFkX2NzdjIoImh0dHBzOi8vYWhqLmhpLmlzL2thdXBza3JhLmNzdiIsIGxvY2FsZSA9IGxvY2FsZShlbmNvZGluZyA9ICJJU084ODU5LTEiKSkNCg0KbnljIDwtIHJlYWRfY3N2KCJodHRwczovL2Foai5oaS5pcy9OWUNfc3Vid2F5X3RyYWZmaWMuY3N2IikNCmBgYA0KDQojIyMjIFNrb8OwYSBpbm5sZXNuYXIgc2tyw6FyDQoNCmBgYHtyfQ0KbmFtZXModG9tYXRvZXMpICMgbsO2Zm4gZMOhbGthDQpoZWFkKHRvbWF0b2VzKSAjIGZ5cnN0dSA2IGzDrW51ciBnYWduYXTDtmZsdQ0Kc3RyKHRvbWF0b2VzKSAjIGRhdGF0eXBlIGFsbHJhIGJyZXl0YQ0KbGVuZ3RoKHRvbWF0b2VzKSAjIGTDoWxrYXINCmxlbmd0aCh0b21hdG9lcyRnZW5yZSkgIyBmaiDDrSBkw6Fsaw0KZGltKHRvbWF0b2VzKSAjIHN0w6Zyw7AgdMO2Zmx1IFJ4RA0KYGBgDQoNCiMjIyMgU8OtdW4gZ2FnbmENCg0KYGBge3J9DQpuYS5vbWl0KHBvbGwpICMgZmphcmzDpmdpciBsw61udXIgc2VtIGlubmloYWxkYSBOQQ0KDQpkYXRhW3JvdyA8IDUsIGNvbF0gIyBow6ZndCBhw7Agbm90YSBzZW0gZmlsdGVyLCBtZcOwIMO+dsOtIGHDsCBzZXRqYSBjb25kaXRpb24gw6EgYW5uYcOwIGXDsGEgYsOmw7BpDQoNCnNsaWNlKGRhdGEsIDE6MTApICMgdmVsdXIgbMOtbnVyIDEtMTAgw7pyIGRhdGENCg0KZmlsdGVyKGRhdGEsIGNvbmRpdGlvbiwgY29uZGl0aW9uLCAuLi4uKSANCg0KYGBgDQoNCiMjIyMgS8Ozw7B1biBicmV5dGENCg0KYGBge3J9DQpkYXRhIDwtIG11dGF0ZShkYXRhLCBicmV5dGEgPSBmYWN0b3IoYnJleXRhKSkgIyBicmV5dGEgw60gZmxva2thYnJleXR1DQoNCmxldmVscyhkYXRhJGNvbHVtKSA8LSBjKCJ0eXBlIiwgLi4uLiApICMgYnJleXRpciBmbG9ra3VtDQojIHRpbCDDvmVzcyBhw7Agc2FtZWluYSBmbG9ra2EsIG5vdGEgbGV2ZWxzLCBvZyBza8O9cmEgMiBmbG9ra2Egw75hw7Agc2FtYS4gDQoNCmN1dChkYXRhJGNvbCwgYyh2YWx1ZXMsIC4uKSwgcmlnaHQgPSBGKSAjIHNraXB0aXIgdGFsbmFicmV5dHUgdXBwIMOtIHRhbG5hYmlsLCBub3QgaW5jbHVkaW5nIHJpZ2h0DQoNCnJlbmFtZShkYXRhLCBuZXduYW1lID0gb2xkbmFtZSkgIyByZW5hbWUgY29sdW1zDQoNCmBgYA0KDQojIyBNeW5kcsOmbiBmcmFtc2V0dGluZw0KDQpgYGB7cn0NCmdncGxvdChkYXRhID0gZGF0YSwgYWVzKHg9IGNvbHVtLCAuLi4pKSAjIGdydW5udXJpbm4gYWYgZ3LDtmZ1bQ0KDQpnZW9tX2JhcigpICMgU3TDtnBsYXJpdA0KZ2VvbV9wbG90KCkgIyBwdW5rdGFyaXQNCmdlb21faGlzdG9ncmFtKCkgIyBTdHXDsGxhcml0DQpnZW9tX2JveHBsb3QoKSAjIEthc3Nhcml0DQpzdGF0X3FxKCkgIyBOb3JtYWxkcmVpZmluZ2Fycml0DQoNCnhsYWIoJ25hbWUnKSANCnlsYWIoJ25hbWUnKSAjIG7DtmZuIMOhc2FuYQ0KDQpzY2FsZV94X2NvbnRpbnVvdXMoYnJlYWtzID0gc2VxKDEwLCAxMDAsIDUpKSAjIHggZXIgc2FtZmVsbGQsIHRhbG5hbMOtbmFuIHPDvW5pciBnaWxkaSBmcsOhIDEwIHRpbCAxMDAgbWXDsCAxMCBiaWxhIG1pbGxpYmlsaQ0Kc2NhbGVfeF9kaXNjcmV0ZShsYWJlbHMgPSBjKCdlaHYnLC4uKSkgIyB4IGVyIHN0cmrDoWwNCg0KeGxpbShtaW4sIG1heCkNCnlsaW0obWluLG1heCkgIyBzdGlsbGlyIGt2YXLDsGENCg0KIyBMaXRpcg0KYWVzKHg9Li4gLCBjb2xvciA9IGJyZXl0YSkgIyBsaXRhciBtaXNtdW5hbmRpIGZsb2trYSDDrSBzaXR0aHZvcnVtIGxpdG51bSwgcHVua3Rhcml0DQphZXMoeD0uLiAsIGZpbGwgPSBicmV5dGEpICMgbGl0YXIgaHZlcmphIHPDumx1IGVmdGlyIGZsb2trdW0sIHN0w7ZwbGFyaXQNCmFlcyh4PS4uICwgc2hhcGUgPSBicmV5dGEpICMgbWlzbXVuYW5kaSBmb3JtIMOtIHB1bmt0YXJpdGkNCg0KZmFjZXRfZ3JpZCh4IH4geSkgIyB4ID0gcm93LCB5ID0gY29sdW0sIHRpbCBhw7Agc2tpcHRhIG5pw7B1cnN0w7bDsHVtIGdyYWZzIHVwcCBlZnRpciAiPyIgZWluaHZlcmp1bSDDtsOwcnVtIGZsb2traQ0KDQp0aGVtZV9jbGFzc2ljKCkgI2JhcmEgZmxvdHRhcmENCmBgYA0KDQojIyBUw7ZsZnLDpsOwaSBncnVubnVyDQoNCiMjIyMgVGFsbmFicmV5dHVyDQoNCmBgYHtyfQ0KIyBub3RhIG5hLnJtID0gVCBhZnRhc3QNCm1heChkYXRhKSANCm1pbihkYXRhKQ0KbWVhbihkYXRhKQ0KbWVkaWFuKGRhdGEpDQp2YXIoZGF0YSkgIyBkcmVpZm5pLCB2YXJpYWJpbGl0eQ0Kc2QoZGF0YSkgIyBzdGHDsGFsZnLDoXZpaw0KcXVhbnRpbGUoZGF0YSkgIyBmasOzcsOwdW5nc23DtnJrDQoNCg0KY29yKGRhdGExLCBkYXRhMiwgdXNlPSJjb21wbGV0ZS5vYnMiKQ0KDQpgYGANCg0KIyMjIyBGbG9ra2FicmV5dHVyDQoNCmBgYHtyfQ0KdGFibGUoZGF0YSRjb2wpICMgdGVsdXIgaHZlcnN1IG9mdCBodmVyIGZsb2trdXIga2VtdXIgZnlyaXINCg0KdGFibGUoZGF0YSRjb2wxLCBkYXRhJGNvbDIpICMgc2Ftc2V0bmluZ2FyDQoNCnByb3AudGFibGUodGFibGUoZGF0YSRjb2wpKSAjIHNraWxhciBobHV0ZsO2bGx1bQ0KIyBtZcOwIG1hcmdpbiA9IDEsIHNrb8OwdW0gdmnDsCBobHV0ZsO2bGwgZWZ0aXIgbMOtbnVtLCAyIGVmdGlyIGTDoWxrdW0NCmBgYA0KDQojIyMjIEFubmHDsCBnYWdubGVndA0KDQpgYGB7cn0NCnN1bW1hcnkoZGF0YSkNCiMgVGFsbmFicmV5dGE6IG1pbiwgMVEsIG1lZGlhbiwgbWVhbiwgM1EsIG1heA0KIyBGbG9ra2FicmV5dGE6IHPDtm11IHVwbCwgbmVtYSBmeXJpciBodmVyamEgb2cgZWluYSBicmV5dHUgw60gdMO2Zmx1bm5pDQoNCnRhcHBseShkYXRhJGNvbDEsIGRhdGEkY29sMiwgYcOwZmVyw7BfdGFsbmFicmV5dGEsIG5hLnJtPSBUUlVFKQ0KIyBhcHBseSDDoWt2ZcOwbmEgYcOwZmVyw7Agw6EgdGFsbmFicmV5dHUgZWZ0aXIgZmxva2t1bQ0KYGBgDQoNCiMjIEzDrWtpbmRhZnLDpsOwaSBncnVubnVyDQoNCiMjIyMgUmVpa25pYcOwZ2Vyw7Bpcg0KDQpgYGB7cn0NCmZhY3RvcmlhbCh4KSAjIHNraWxhciBmYWN0b3JpYWwgYWYgeA0KY2hvb3NlKG4saykgIyBza2lsYXIgdHbDrWxpw7B1c3R1w7BsaSBhZiAobiBrKQ0KDQpgYGANCg0KIyMjIyBTdHJqw6FsYXIgbMOta2luZGFkcmVpZmluZ2FyDQoNCmBgYHtyfQ0KIyBUdsOta29zdGFkcmVpZmluZw0KDQpkYmlub20oazE6azIsbixwKSAjIFNraWxhciBsw61rdW0gZnLDoSBrMSB0aWwgazIsIMOtIG4gdGlscmF1bnVtIG1lw7AgbMOta3VyIHAuIA0KDQpwYmlub20oayxuLHApICMgc2tpbGFyIGzDrWt1bSDDoSBhw7AgZsOhIDw9IGsgbWXDsCBuIHRpbHJhdW51bSBtZcOwIGzDrWt1ciBwLiANCg0KIyBQb2lzc29uIGRyZWlmaW5nDQoNCmRwb2lzKGssbGFtYmRhKSAjIGMoeCx4LHguLi4pIMOtIHN0YcOwaW4gZnlyaXIgaywgbWXDsCB2w6ZudGlnaWxkaSBsYW1iZGENCnBwb2lzKGssbGFtYmRhKQ0KIyBzYW1iw6ZyaWxlZ3Qgb2cgZCxwIMOtIGJpbm9tDQoNCmBgYA0KDQojIyMjIFNhbWZlbGxkYXIgbMOta2luZGFkcmVpZmluZ2FyDQoNCmBgYHtyfQ0KIyBub3JtYWxkcmVpZmluZw0KIyBzasOhbGZnZWZpw7AgbWVhbiA9IDAgb2cgc2QgPSAxDQpwbm9ybSh4LCBtZWFuLCBzZCkgIyB4ID0gdmnDsG1pw7B1bmFyZ2lsZGksIGzDrWt1cm5hciDDoSBhw7Agc2xlbWJpc3TDpnLDsCBtZcOwIG1lw7BhbHRhbCBtZWFuLCBvZyBzZCB0YWtpIGdpbGRpIHNlbSBlciBtaW5uYSBlbiB4Lg0KcW5vcm0oYSxtLHNkKSAjIHNraWxhciBnaWxkaSDDrSBhIHBlcmNlbnRpbGUsIHZpw7BtacOwdW5hcmdpbGRpDQpybm9ybShuLCBtZWFuLCBzZCkgIyBiw71yIHRpbCBuIG3DtnJnIGdpbGRpLCBtZcOwIG1lw7BhbHRhbCBvZyBzdGHDsGFsZnLDoXZpaw0KDQpgYGANCg0KIyMgw4FseWt0dW5hcnTDtmxmcsOmw7BpDQoNCiMjIyMgQW5uYcOwDQoNCmBgYHtyfQ0Kc2FtcGxlKGRhdGEsIG51bSkgIyBza2lsYXIgbnVtIG3DtnJndW0gw7pyIGRhdGENCiMgcmVwbGFjZSA9IFQgbGV5ZmlyIG9ra3VyIGHDsCB2ZWxqYSBkdXBsaWNhdGVzDQoNCnJlcGxpY2F0ZShuLCBzYW1wbGUoZGF0YSRjb2wsIG0sIHJlcGxhY2UgPVQpKSAjIGVuZHVydGVrdXIgc2tpcHVuIG4gc2lubnVtLCBtZcOwIMO6cnRhayBtDQpgYGANCg0KIyMjIyBGbG9ra2FicmV5dHVyDQo=</div>
 
 
 
