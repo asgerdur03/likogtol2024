@@ -187,3 +187,179 @@ replicate(n, sample(data$col, m, replace =T)) # endurtekur skipun n sinnum, með
 ```
 
 #### Flokkabreytur
+
+ályktanir um 1 hlutfall
+
+```{r}
+binom.test(table(data$col)) # matað með fjölda útkoma af hverri gerð
+# skilar tilgátuprófi, öryggisbili og prófstærðini
+```
+
+ályktanir um 2 eða fleiri hlutföll
+
+```{r}
+prop.table(table(data$col1, data$col2)) 
+# sama og binom.test, nema með 2 flokkabreytum
+
+# fáum einnig X-squared = prófastærðin, df= frígráða
+
+# ef við ætlum að meta með fleiri en 2, þá má taflan úr prop.table ekki hafa fleiri en 2 dálka
+```
+
+ályktanir um tengslatöflur
+
+```{r}
+# kannar hvort það sé einhver tengsl á milli breytana
+chisq.test(table(data$col1, data$col2))
+# fáum prófstærð, frígráður og p gildi
+
+væntitiðnitafla <- chisq.test(...)
+væntitiðnitafla$expected # skilar væntitíðnitöflu
+
+# !ef gildi væntitíðnitölfunar er < 5, nota fisher test í staðin
+
+fisher.test(...) # sama input og chisq
+```
+
+#### Talnabreytur
+
+###### Ályktanir um dreifni
+
+kanna dreifni í tveim eða fleiri normaldreifðum þýðum
+
+dreifni í 2 þýðum
+
+```{r}
+var.test(breyta1, breyta2) # ef þær eru geymdar á víðu sniði
+
+var.test(maeling ~ hopur) # geymd á löngu sniði, hopur er flokkabreyta, maeling er tanlabreyta?
+
+# F = profstærð
+```
+
+dreifni í fleyri þýðum
+
+```{r}
+bartlett.test(maeling ~ hopur)
+# K = prófstærð
+```
+
+###### Ályktanir um meðaltöl
+
+```{r}
+t.test(data$col, mu = x) # 1 breyta, sjálfvirkt mu = 0
+# H0: u = mu
+
+# t = prófstærð
+# df = fj frígráða
+
+t.test(maeling ~ hopur) # 2 breytur, skoða H0: u1-u2 = mu
+
+# á víðu sniðu
+tab <- spread(data, catF, catNum)
+t.test(tab$cat1, tab$cat2)
+```
+
+paraðar mælingar
+
+```{r}
+pulshljop <- filter(puls, inngrip=='hljop')
+pulskyrr<- filter(puls, inngrip=='sat_kyrr')
+t.test(pulshljop$fyrriPuls, pulshljop$seinniPuls, paired=TRUE)
+
+```
+
+Stikalaus próf
+
+notuð ef við getum ekki framkvæmt t próf
+
+```{r}
+wilcox.test() 
+# Inntak: nöfn á einni eða tveimur talnabreytum eða nafn á talnabreytu og flokkabreytu
+
+# Úttak: gildi á prófstærð, p-gildi
+
+wilcox.test(puls$fyrriPuls,mu=70)
+
+wilcox.test(pulshljop$fyrriPuls, pulshljop$seinniPuls, paired=TRUE)
+
+wilcox.test(pulskyrr$fyrriPuls, pulskyrr$seinniPuls, paired=TRUE)
+
+
+```
+
+## Einþátta fervikagreining
+
+#### Ályktanir um tvö eða fleiri meðaltöl
+
+```{r}
+# inntak: talnabreyta og flokkabreyta
+
+fervik <- aov(maeling ~ hopur)
+
+anova(fervik)
+
+names$fervik # útkomur úr greiningunni
+
+fervik$xxx # nálgast xxx
+```
+
+#### Eftiráprófanir
+
+```{r}
+# Inntak: nafn á fervikagreiningarhlut
+
+TukeyHSD(fervik) # eftiráprófun
+
+plot(TukeyHSD(fervik)) #myndrænt
+
+```
+
+#### Stikalaus próf
+
+Framkvæmd þegar öll skilyrði eru ekki uppfyllt
+
+```{r}
+# Inntak: nafn á talnabreytu og nafn á flokkabreytu
+
+kruskal.test(...) # sama og aov
+
+```
+
+## Línuleg aðhvarfsgreining
+
+y=β0+β1x
+
+```{r}
+l <- lm(x ~ svarbreyta, data = data)
+
+# metur línuna
+
+# intercept, efri = b0, nedri = b1
+# Matið á σ er s_e = Residual standard error
+```
+
+```{r}
+confint(l) # skilar öryggisbili hvers stuðuls
+```
+
+```{r}
+ggplot(data = l, aes(sample= .resid)) + stat_qq() 
+# graf af normaldreifingu af leifunum
+```
+
+```{r}
+predict(l,newdata=data.frame(haed=180))
+# spágildi á þyngd manneskju sem er 180cm
+
+predict(lm1,interval="prediction",newdata=data.frame(haed=180))
+# spábil fyrir þyngd 180 manneskju
+
+```
+
+tilgátupróf fyrir ρ
+
+```{r}
+cor.test(data$col1, data$col2)
+
+```
